@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cardápio</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+   body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 0;
+}
+
+/* TOPO */
+h1 {
+  background: #25D366;
+  color: white;
+  padding: 20px;
+  margin: 0;
+}
+
+/* CONTAINER */
+.container {
+  padding: 20px;
+}
+
+/* PRODUTOS */
+.produto {
+  background: white;
+  margin-bottom: 15px;
+  padding: 15px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.produto-info {
+  text-align: left;
+}
+
+.produto h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.produto p {
+  margin: 5px 0;
+  color: #666;
+}
+
+/* BOTÕES */
+button {
+  background: #25D366;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #1ebe5d;
+}
+
+/* CARRINHO */
+#carrinho {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: white;
+  border-top: 2px solid #ddd;
+  padding: 15px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+#carrinho h2 {
+  margin: 0 0 10px;
+}
+
+#lista {
+  max-height: 100px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+#total {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* BOTÕES DO CARRINHO */
+#carrinho button {
+  width: 100%;
+  margin-top: 10px;
+}
+
+#limpar {
+  background: red;
+}
+button {
+  background: #25D366;
+}
+#lista button {
+  margin: 5px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  font-size: 16px;
+}
+.produto img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+  </style>
+</head>
+
+<body>
+
+  <h1>🍔 Lanchonete da Jana</h1>
+
+  <div id="carrinho">
+    <h2>🛒 Seu pedido</h2>
+    <ul id="lista"></ul>
+    <p id="total">Total: R$ 0</p>
+    <button onclick="limparCarrinho()">🧹 Limpar Carrinho</button>
+  </div>
+
+  <div class="container">
+
+  <!-- X-BURGER -->
+  <div class="produto">
+  <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&h=250&q=80" alt="X-Burger">
+    <div class="produto-info">
+      <h2>X-Burger</h2>
+      <p>R$ 15</p>
+
+      <strong>Adicionais:</strong><br>
+
+      <label><input type="checkbox" value="Queijo" data-preco="2"> Queijo (+R$ 2)</label><br>
+      <label><input type="checkbox" value="Bacon" data-preco="3"> Bacon (+R$ 3)</label><br>
+
+      <input type="text" placeholder="Observação" class="obs">
+    </div>
+
+    <button onclick="adicionarComExtras(this)">Adicionar</button>
+  </div>
+
+  <!-- BAURU -->
+  <div class="produto">
+ <img src="https://images.unsplash.com/photo-1606755456206-b25206cde27e?auto=format&fit=crop&w=400&h=250&q=80" alt="Bauru">
+    <div class="produto-info">
+      <h2>Bauru</h2>
+      <p>R$ 14</p>
+
+      <strong>Adicionais:</strong><br>
+
+      <label><input type="checkbox" value="Ovo" data-preco="2"> Ovo (+R$ 2)</label><br>
+      <label><input type="checkbox" value="Queijo Extra" data-preco="2"> Queijo Extra (+R$ 2)</label><br>
+
+      <input type="text" placeholder="Observação" class="obs">
+    </div>
+
+    <button onclick="adicionarComExtras(this)">Adicionar</button>
+  </div>
+
+  <!-- CACHORRO QUENTE -->
+  <div class="produto">
+    <img src="https://images.unsplash.com/photo-1551782450-17144efb9c50?auto=format&fit=crop&w=400&h=250&q=80" alt="Cachorro Quente">
+    <div class="produto-info">
+      <h2>Cachorro Quente</h2>
+      <p>R$ 12</p>
+
+      <strong>Adicionais:</strong><br>
+
+      <label><input type="checkbox" value="Batata Palha" data-preco="2"> Batata Palha (+R$ 2)</label><br>
+      <label><input type="checkbox" value="Milho" data-preco="1"> Milho (+R$ 1)</label><br>
+
+      <input type="text" placeholder="Observação" class="obs">
+    </div>
+
+    <button onclick="adicionarComExtras(this)">Adicionar</button>
+  </div>
+
+  <!-- COCA-COLA -->
+  <div class="produto">
+    <img src="https://images.unsplash.com/photo-1581636625402-29b2a704ef13?auto=format&fit=crop&w=400&h=250&q=80" alt="Coca-Cola">
+
+
+    <div class="produto-info">
+      <h2>Coca-Cola</h2>
+      <p>R$ 8</p>
+
+      <strong>Adicionais:</strong><br>
+
+      <label><input type="checkbox" value="Gelo" data-preco="0"> Gelo</label><br>
+      <label><input type="checkbox" value="Limão" data-preco="1"> Limão (+R$ 1)</label><br>
+
+      <input type="text" placeholder="Observação" class="obs">
+    </div>
+
+    <button onclick="adicionarComExtras(this)">Adicionar</button>
+  </div>
+
+  </div>
+
+  <button onclick="adicionarComExtras(this)">Adicionar</button>
+  </div>
+
+  <button onclick="finalizarPedido()">Finalizar Pedido</button>
+
+  <script>
+   let carrinho = [];
+let total = 0;
+
+function adicionar(nome, preco) {
+  let itemExistente = carrinho.find(item => item.nome === nome);
+
+  if (itemExistente) {
+    itemExistente.quantidade += 1;
+  } else {
+    carrinho.push({ nome: nome, preco: preco, quantidade: 1 });
+  }
+
+  total += preco;
+  atualizarTela();
+}
+
+function atualizarTela() {
+   let lista = document.getElementById("lista");
+  let totalTexto = document.getElementById("total");
+
+  lista.innerHTML = "";
+
+  carrinho.forEach((item, index) => {
+    let li = document.createElement("li");
+
+    li.innerHTML = `
+      ${item.nome}
+      <br>
+      <button onclick="diminuir(${index})">➖</button>
+      ${item.quantidade}
+      <button onclick="aumentar(${index})">➕</button>
+      <br>R$ ${item.preco * item.quantidade}
+    `;
+
+    lista.appendChild(li);
+  });
+
+  totalTexto.textContent = "Total: R$ " + total;
+}
+function remover(index) {
+  let item = carrinho[index];
+
+  total -= item.preco;
+
+  if (item.quantidade > 1) {
+    item.quantidade -= 1;
+  } else {
+    carrinho.splice(index, 1);
+  }
+
+  atualizarTela();
+}
+
+function limparCarrinho() {
+  carrinho = [];
+  total = 0;
+  atualizarTela();
+}
+
+function finalizarPedido() {
+  let telefone = "53999816127";
+
+  let mensagem = "Olá, quero pedir:\n";
+
+  carrinho.forEach(item => {
+    mensagem += `- ${item.nome} (${item.quantidade}x)\n`;
+  });
+
+  mensagem += "\nTotal: R$ " + total;
+
+  let url = `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
+
+  window.open(url, "_blank");
+}
+
+function aumentar(index) {
+  carrinho[index].quantidade += 1;
+  total += carrinho[index].preco;
+  atualizarTela();
+}
+function diminuir(index) {
+  let item = carrinho[index];
+
+  total -= item.preco;
+
+  if (item.quantidade > 1) {
+    item.quantidade -= 1;
+  } else {
+    carrinho.splice(index, 1);
+  }
+
+  atualizarTela();
+}
+function adicionarComExtras(botao) {
+  let produtoDiv = botao.parentElement;
+
+  let nome = produtoDiv.querySelector("h2").textContent;
+  let precoBase = parseFloat(produtoDiv.querySelector("p").textContent.replace("R$ ", ""));
+
+  let extras = produtoDiv.querySelectorAll("input[type=checkbox]:checked");
+
+  let nomeFinal = nome;
+  let precoFinal = precoBase;
+
+  extras.forEach(extra => {
+    nomeFinal += " + " + extra.value;
+    precoFinal += parseFloat(extra.dataset.preco);
+  });
+
+  adicionar(nomeFinal, precoFinal);
+
+  extras.forEach(e => e.checked = false);
+}
+function adicionarComExtras(botao) {
+  let produtoDiv = botao.parentElement;
+
+  let nome = produtoDiv.querySelector("h2").textContent;
+  let precoBase = Number.parseFloat(
+    produtoDiv.querySelector("p").textContent.replace("R$ ", "")
+  );
+
+  let extras = produtoDiv.querySelectorAll("input[type=checkbox]:checked");
+  let observacao = produtoDiv.querySelector(".obs").value;
+
+  let nomeFinal = nome;
+  let precoFinal = precoBase;
+
+  // adiciona extras
+  extras.forEach(extra => {
+    nomeFinal += " + " + extra.value;
+    precoFinal += Number.parseFloat(extra.dataset.preco);
+  });
+
+  // adiciona observação
+  if (observacao.trim() !== "") {
+    nomeFinal += " (" + observacao + ")";
+  }
+
+  adicionar(nomeFinal, precoFinal);
+
+  // limpa depois
+  extras.forEach(e => e.checked = false);
+  produtoDiv.querySelector(".obs").value = "";
+}
+</script>
+
+</body>
+</html>
