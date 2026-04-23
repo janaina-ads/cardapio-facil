@@ -16,10 +16,12 @@ h1 {
   background: #25D366;
   color: white;
   padding: 20px;
+  margin: 0;
+  text-align: center;
 }
 
 .container {
-  padding: 20px;
+  padding: 15px;
 }
 
 .produto {
@@ -27,15 +29,18 @@ h1 {
   margin-bottom: 15px;
   padding: 15px;
   border-radius: 12px;
-  display: flex;
-  gap: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .produto img {
-  width: 120px;
-  height: 100px;
+  width: 100%;
+  height: 180px;
   object-fit: cover;
   border-radius: 10px;
+}
+
+.produto h2 {
+  margin: 10px 0 5px;
 }
 
 button {
@@ -44,15 +49,33 @@ button {
   border: none;
   padding: 10px;
   border-radius: 8px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* CARRINHO */
+#carrinho {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-top: 2px solid #ddd;
+}
+
+#lista {
+  max-height: 80px;
+  overflow-y: auto;
 }
 
 /* BOTÃO WHATS */
 #finalizar {
   position: fixed;
-  bottom: 100px;
-  right: 20px;
+  bottom: 120px;
+  right: 15px;
   padding: 15px;
   border-radius: 50px;
+  font-size: 16px;
 }
 </style>
 </head>
@@ -63,44 +86,140 @@ button {
 
 <div class="container">
 
+<!-- X-BURGER -->
 <div class="produto">
-  <img src="https://images.unsplash.com/photo-1550547660-d9450f859349">
-  <div>
-    <h2>X-Burger</h2>
-    <p>R$ 15</p>
-    <button onclick="adicionar('X-Burger',15)">Adicionar</button>
-  </div>
+<img src="https://images.unsplash.com/photo-1550547660-d9450f859349">
+<h2>X-Burger</h2>
+<p>R$ 15</p>
+
+<label><input type="checkbox" value="Queijo" data-preco="2"> Queijo (+2)</label><br>
+<label><input type="checkbox" value="Bacon" data-preco="3"> Bacon (+3)</label>
+
+<input type="text" placeholder="Observação" class="obs">
+
+<button onclick="adicionarComExtras(this)">Adicionar</button>
 </div>
 
+<!-- BAURU -->
 <div class="produto">
-  <img src="https://images.unsplash.com/photo-1551782450-17144efb9c50">
-  <div>
-    <h2>Cachorro Quente</h2>
-    <p>R$ 12</p>
-    <button onclick="adicionar('Cachorro Quente',12)">Adicionar</button>
-  </div>
+<img src="https://images.unsplash.com/photo-1606755456206-b25206cde27e">
+<h2>Bauru</h2>
+<p>R$ 14</p>
+
+<label><input type="checkbox" value="Ovo" data-preco="2"> Ovo (+2)</label><br>
+<label><input type="checkbox" value="Queijo" data-preco="2"> Queijo (+2)</label>
+
+<input type="text" placeholder="Observação" class="obs">
+
+<button onclick="adicionarComExtras(this)">Adicionar</button>
+</div>
+
+<!-- HOT DOG -->
+<div class="produto">
+<img src="https://images.unsplash.com/photo-1551782450-17144efb9c50">
+<h2>Cachorro Quente</h2>
+<p>R$ 12</p>
+
+<label><input type="checkbox" value="Batata" data-preco="2"> Batata (+2)</label><br>
+<label><input type="checkbox" value="Milho" data-preco="1"> Milho (+1)</label>
+
+<input type="text" placeholder="Observação" class="obs">
+
+<button onclick="adicionarComExtras(this)">Adicionar</button>
+</div>
+
+<!-- COCA -->
+<div class="produto">
+<img src="https://images.unsplash.com/photo-1581636625402-29b2a704ef13">
+<h2>Coca-Cola</h2>
+<p>R$ 8</p>
+
+<label><input type="checkbox" value="Limão" data-preco="1"> Limão (+1)</label>
+
+<input type="text" placeholder="Observação" class="obs">
+
+<button onclick="adicionarComExtras(this)">Adicionar</button>
 </div>
 
 </div>
 
+<!-- CARRINHO -->
+<div id="carrinho">
+<ul id="lista"></ul>
+<p id="total">Total: R$ 0</p>
+<button onclick="limparCarrinho()">Limpar</button>
+</div>
+
+<!-- BOTÃO WHATS -->
 <button id="finalizar" onclick="finalizarPedido()">
 📲 Pedir no WhatsApp
 </button>
 
 <script>
 let carrinho = [];
+let total = 0;
 
 function adicionar(nome, preco){
   carrinho.push({nome, preco});
+  total += preco;
+  atualizarTela();
+}
+
+function atualizarTela(){
+  let lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  carrinho.forEach(item=>{
+    let li = document.createElement("li");
+    li.textContent = item.nome + " - R$ " + item.preco;
+    lista.appendChild(li);
+  });
+
+  document.getElementById("total").textContent = "Total: R$ " + total;
+}
+
+function limparCarrinho(){
+  carrinho = [];
+  total = 0;
+  atualizarTela();
+}
+
+function adicionarComExtras(botao){
+  let produto = botao.parentElement;
+
+  let nome = produto.querySelector("h2").textContent;
+  let preco = parseFloat(produto.querySelector("p").textContent.replace("R$ ",""));
+
+  let extras = produto.querySelectorAll("input[type=checkbox]:checked");
+  let obs = produto.querySelector(".obs").value;
+
+  extras.forEach(e=>{
+    nome += " + " + e.value;
+    preco += parseFloat(e.dataset.preco);
+  });
+
+  if(obs.trim() !== ""){
+    nome += " (" + obs + ")";
+  }
+
+  adicionar(nome, preco);
+
+  extras.forEach(e=>e.checked=false);
+  produto.querySelector(".obs").value="";
 }
 
 function finalizarPedido(){
   let telefone = "53999816127";
-  let msg = "Olá, quero pedir:\n";
+
+  let mesa = new URLSearchParams(window.location.search).get("mesa") || "Não informada";
+
+  let msg = "Mesa: " + mesa + "\n\nPedido:\n";
 
   carrinho.forEach(item=>{
     msg += "- " + item.nome + "\n";
   });
+
+  msg += "\nTotal: R$ " + total;
 
   let url = `https://wa.me/${telefone}?text=${encodeURIComponent(msg)}`;
   window.open(url);
@@ -108,4 +227,3 @@ function finalizarPedido(){
 </script>
 
 </body>
-</html>
