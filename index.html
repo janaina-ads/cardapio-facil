@@ -203,11 +203,6 @@ button {
       <input type="text" placeholder="Observação" class="obs">
     </div>
 
-    <button onclick="adicionarComExtras(this)">Adicionar</button>
-  </div>
-
-  </div>
-
   <button onclick="adicionarComExtras(this)">Adicionar</button>
   </div>
 
@@ -360,6 +355,9 @@ function adicionarComExtras(botao) {
   extras.forEach(e => e.checked = false);
   produtoDiv.querySelector(".obs").value = "";
 }
+   <button id="finalizar" onclick="finalizarPedido()">
+   Enviar Pedido no WhatsApp
+</button>
 </script>
 
 </body>
