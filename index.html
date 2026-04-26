@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cardápio</title>
+
 <style>
 body {
   font-family: Arial;
@@ -18,10 +19,10 @@ h1 {
   margin: 0;
   text-align: center;
 }
-  
+
 .container {
   padding: 15px;
-  padding-bottom: 180px;
+  padding-bottom: 180px; 
 }
 
 .produto {
@@ -66,21 +67,21 @@ button {
 
 /* BOTÃO WHATS */
 #finalizar {
-  position: fixed;
+   position: fixed;
   bottom: 150px;
   right: 15px;
   padding: 15px;
   border-radius: 50px;
   font-size: 16px;
 }
-  @media (max-width: 600px) {
+@media (max-width: 600px) {
   #finalizar {
     bottom: 200px;
   }
 
   .container {
     padding-bottom: 220px;
-  }
+ }
 }
 
 </style>
@@ -91,16 +92,11 @@ button {
 <h1>🍔 Lanchonete da Jana</h1>
 
 <div class="container">
-<h2>🍔 Lanches</h2>
+<h2>🍔 Lanches</h2>  
 <div class="produto">
 <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=500" alt="X-Burger">
 <h2>X-Burger</h2>
 <p>R$ 15</p>
-
-<label><input type="checkbox" value="Queijo" data-preco="2"> Queijo (+2)</label><br>
-<label><input type="checkbox" value="Bacon" data-preco="3"> Bacon (+3)</label>
-
-<input type="text" placeholder="Observação" class="obs">
 
 <button onclick="adicionarComExtras(this)">Adicionar</button>
 </div>
@@ -110,8 +106,6 @@ button {
 <h2>Bauru</h2>
 <p>R$ 14</p>
 
-<label><input type="checkbox" value="Ovo" data-preco="2"> Ovo (+2)</label><br>
-<label><input type="checkbox" value="Queijo" data-preco="2"> Queijo (+2)</label>
 
 <input type="text" placeholder="Observação" class="obs">
 
@@ -119,28 +113,18 @@ button {
 </div>
 
 <div class="produto">
-<img src="https://images.unsplash.com/photo-1551782450-17144efb9c50"alt="Cachorro Quente">
+<img src="https://images.unsplash.com/photo-1551782450-17144efb9c50" alt="Cachorro Quente">
 <h2>Cachorro Quente</h2>
 <p>R$ 12</p>
-
-<label><input type="checkbox" value="Batata" data-preco="2"> Batata (+2)</label><br>
-<label><input type="checkbox" value="Milho" data-preco="1"> Milho (+1)</label>
-
-<input type="text" placeholder="Observação" class="obs">
 
 <button onclick="adicionarComExtras(this)">Adicionar</button>
 </div>
 <h2>🥤 Bebidas</h2>
 <div class="produto">
  <img src="https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=500" alt="Coca-Cola">
-
   <h2>Coca-Cola</h2>
   <p>R$ 8</p>
 
-  <label>
-    <input type="checkbox" value="Limão" data-preco="1">
-    Limão (+1)
-  </label>
 
   <input type="text" placeholder="Observação" class="obs">
 
@@ -181,7 +165,7 @@ function adicionar(nome, preco){
   atualizarTela();
 }
 
-  function atualizarTela(){
+function atualizarTela(){
   let lista = document.getElementById("lista");
   lista.innerHTML = "";
 
@@ -195,6 +179,11 @@ function adicionar(nome, preco){
 
   document.getElementById("total").textContent = "Total: R$ " + total;
 }
+function limparCarrinho(){
+  carrinho = [];
+  total = 0;
+  atualizarTela();
+}
 
 function adicionarComExtras(botao){
   let produto = botao.parentElement;
@@ -202,22 +191,21 @@ function adicionarComExtras(botao){
   let nome = produto.querySelector("h2").textContent;
   let preco = parseFloat(produto.querySelector("p").textContent.replace("R$ ",""));
 
-  let extras = produto.querySelectorAll("input[type=checkbox]:checked");
-  let obs = produto.querySelector(".obs").value;
+  // 👇 COLOCA AQUI
+  let extras = document.querySelectorAll("#extras input:checked");
 
-  extras.forEach(e=>{
-    nome += " + " + e.value;
-    preco += parseFloat(e.dataset.preco);
+  let nomeFinal = nome;
+  let precoFinal = preco;
+
+  extras.forEach(extra=>{
+    nomeFinal += " + " + extra.value;
+    precoFinal += parseFloat(extra.dataset.preco);
   });
 
-  if(obs.trim() !== ""){
-    nome += " (" + obs + ")";
-  }
+  adicionar(nomeFinal, precoFinal);
 
-  adicionar(nome, preco);
-
-  extras.forEach(e=>e.checked=false);
-  produto.querySelector(".obs").value="";
+  // limpa depois
+  extras.forEach(e => e.checked = false);
 }
 
 function finalizarPedido(){
@@ -236,7 +224,6 @@ function finalizarPedido(){
   let url = `https://wa.me/${telefone}?text=${encodeURIComponent(msg)}`;
   window.open(url);
 }
-  
 </script>
 
 </body>
