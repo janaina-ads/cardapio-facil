@@ -191,22 +191,32 @@ function adicionarComExtras(botao){
   let nome = produto.querySelector("h2").textContent;
   let preco = parseFloat(produto.querySelector("p").textContent.replace("R$ ",""));
 
-  // 👇 COLOCA AQUI
   let extras = document.querySelectorAll("#extras input:checked");
+  let observacao = produto.querySelector(".obs")?.value || "";
 
   let nomeFinal = nome;
   let precoFinal = preco;
 
+  
   extras.forEach(extra=>{
     nomeFinal += " + " + extra.value;
     precoFinal += parseFloat(extra.dataset.preco);
   });
 
+  
+  if(observacao.trim() !== ""){
+    nomeFinal += " (" + observacao + ")";
+  }
+
   adicionar(nomeFinal, precoFinal);
 
-  // limpa depois
+  
   extras.forEach(e => e.checked = false);
+  if(produto.querySelector(".obs")){
+    produto.querySelector(".obs").value = "";
+  }
 }
+
 
 function finalizarPedido(){
   let telefone = "53999816127";
