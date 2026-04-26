@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cardápio</title>
-
 <style>
 body {
   font-family: Arial;
@@ -165,7 +164,14 @@ let carrinho = [];
 let total = 0;
 
 function adicionar(nome, preco){
-  carrinho.push({nome, preco});
+  let itemExistente = carrinho.find(item => item.nome === nome);
+
+  if(itemExistente){
+    itemExistente.quantidade += 1;
+  } else {
+    carrinho.push({nome, preco, quantidade: 1});
+  }
+
   total += preco;
   atualizarTela();
 }
