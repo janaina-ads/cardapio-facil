@@ -6,30 +6,28 @@
     <title>Cardápio - Lanchonete da Jana</title>
 
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f6f8; margin: 0; padding-bottom: 200px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f6f8; margin: 0; padding-bottom: 220px; }
         h1 { background: #25D366; color: white; padding: 20px; margin: 0; text-align: center; }
         
         .categorias { display: flex; gap: 10px; padding: 15px; background: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow-x: auto; }
-        .categorias button { background: #eee; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; }
+        .categorias button { background: #eee; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; white-space: nowrap; }
 
         .container { padding: 15px; }
         .produto { background: white; margin-bottom: 20px; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
         .produto img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; }
         
         .preco { color: #25D366; font-weight: bold; font-size: 1.2rem; margin: 5px 0; }
-        
-        /* AREA DE EXTRAS DENTRO DO PRODUTO */
-        .extras-produto { background: #f9f9f9; padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px dashed #ccc; }
-        .extras-produto label { display: block; margin: 5px 0; font-size: 0.9rem; cursor: pointer; }
-
         .obs { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-top: 10px; box-sizing: border-box; }
         .btn-add { background: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer; font-weight: bold; }
 
+        /* ABA DE EXTRAS */
+        #extras label { display: block; background: white; padding: 15px; margin-bottom: 8px; border-radius: 10px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
         /* CARRINHO */
-        #carrinho { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; border-top: 3px solid #25D366; box-sizing: border-box; }
-        #lista { list-style: none; padding: 0; max-height: 80px; overflow-y: auto; font-size: 0.9rem; }
-        .total-area { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; }
-        #finalizar { background: #128C7E; color: white; border: none; padding: 15px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold; }
+        #carrinho { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; border-top: 3px solid #25D366; box-sizing: border-box; z-index: 2000; }
+        #lista { list-style: none; padding: 0; max-height: 80px; overflow-y: auto; font-size: 0.9rem; margin-bottom: 10px; }
+        .total-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        #finalizar { background: #128C7E; color: white; border: none; padding: 15px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold; font-size: 1.1rem; }
     </style>
 </head>
 <body>
@@ -39,59 +37,69 @@
 <div class="categorias">
     <button onclick="mostrar('lanches')">🍔 Lanches</button>
     <button onclick="mostrar('bebidas')">🥤 Bebidas</button>
+    <button onclick="mostrar('extras')">➕ Adicionais</button>
 </div>
 
 <div class="container">
-    <!-- SEÇÃO LANCHES -->
+    
+    <!-- LANCHES -->
     <div id="lanches">
+        <h2>🍔 Nossos Lanches</h2>
+        
         <div class="produto">
             <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=500">
             <h2>X-Burger</h2>
             <p class="preco">R$ 15,00</p>
-            
-            <div class="extras-produto">
-                <strong>Adicionais:</strong>
-                <label><input type="checkbox" value="Queijo" data-preco="2"> + Queijo (R$ 2,00)</label>
-                <label><input type="checkbox" value="Bacon" data-preco="3"> + Bacon (R$ 3,00)</label>
-            </div>
-
-            <input type="text" class="obs" placeholder="Observações...">
-            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar</button>
+            <input type="text" class="obs" placeholder="Observações (ex: sem cebola)">
+            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
         </div>
 
         <div class="produto">
             <img src="https://images.unsplash.com/photo-1606755456206-b25206cde27e?w=500">
             <h2>Bauru</h2>
             <p class="preco">R$ 14,00</p>
-            
-            <div class="extras-produto">
-                <strong>Adicionais:</strong>
-                <label><input type="checkbox" value="Queijo" data-preco="2"> + Queijo (R$ 2,00)</label>
-                <label><input type="checkbox" value="Ovo" data-preco="2"> + Ovo (R$ 2,00)</label>
-            </div>
-
             <input type="text" class="obs" placeholder="Observações...">
-            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar</button>
+            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
+        </div>
+
+        <div class="produto">
+            <img src="https://images.unsplash.com/photo-1551782450-17144efb9c50?w=500">
+            <h2>Cachorro Quente</h2>
+            <p class="preco">R$ 12,00</p>
+            <input type="text" class="obs" placeholder="Observações...">
+            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
         </div>
     </div>
 
-    <!-- SEÇÃO BEBIDAS -->
+    <!-- BEBIDAS -->
     <div id="bebidas" style="display:none">
+        <h2>🥤 Bebidas Geladas</h2>
         <div class="produto">
             <img src="https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=500">
             <h2>Coca-Cola</h2>
             <p class="preco">R$ 8,00</p>
-            <input type="text" class="obs" placeholder="Ex: Com gelo">
-            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar</button>
+            <input type="text" class="obs" placeholder="Ex: Com gelo e limão">
+            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
         </div>
     </div>
+
+    <!-- EXTRAS (FUNCIONA PARA TODOS) -->
+    <div id="extras" style="display:none">
+        <h2>➕ Adicionais Extras</h2>
+        <p><small>Escolha aqui e depois adicione o seu lanche/bebida.</small></p>
+        <label><input type="checkbox" value="Queijo" data-preco="2"> 🧀 Queijo (+ R$ 2,00)</label>
+        <label><input type="checkbox" value="Bacon" data-preco="3"> 🥓 Bacon (+ R$ 3,00)</label>
+        <label><input type="checkbox" value="Ovo" data-preco="2"> 🍳 Ovo (+ R$ 2,00)</label>
+    </div>
+
 </div>
 
+<!-- CARRINHO -->
 <div id="carrinho">
-    <ul id="lista"><li>Carrinho vazio</li></ul>
+    <ul id="lista"><li>Seu carrinho está vazio</li></ul>
     <div class="total-area">
         <strong id="total">Total: R$ 0,00</strong>
-        <button onclick="limparCarrinho()" style="border:none; background:none; color:red; cursor:pointer;">Limpar</button>
+        <button onclick="limparCarrinho()" style="border:none; background:none; color:red; cursor:pointer;">Limpar Tudo</button>
     </div>
     <button id="finalizar" onclick="finalizarPedido()">📲 Pedir no WhatsApp</button>
 </div>
@@ -100,69 +108,89 @@
     let carrinho = [];
     let totalGlobal = 0;
 
+    // Função para trocar as abas
     function mostrar(id) {
-        document.getElementById("lanches").style.display = id === "lanches" ? "block" : "none";
-        document.getElementById("bebidas").style.display = id === "bebidas" ? "block" : "none";
+        document.getElementById("lanches").style.display = "none";
+        document.getElementById("bebidas").style.display = "none";
+        document.getElementById("extras").style.display = "none";
+        document.getElementById(id).style.display = "block";
     }
 
+    // A MÁGICA: Esta função funciona para qualquer item de qualquer aba
     function adicionarComExtras(botao) {
+        // 1. Pega os dados do produto que você clicou
         let card = botao.closest(".produto");
-        let nome = card.querySelector("h2").textContent;
-        let precoBase = parseFloat(card.querySelector(".preco").textContent.replace("R$", "").replace(",", "."));
+        let nomeItem = card.querySelector("h2").textContent;
+        let precoTexto = card.querySelector(".preco").textContent;
+        let precoBase = parseFloat(precoTexto.replace("R$", "").replace(",", "."));
         
         let precoFinal = precoBase;
-        let adicionais = [];
+        let listaAdicionais = [];
 
-        // Agora ele busca apenas os extras DENTRO deste card específico
-        let checks = card.querySelectorAll('.extras-produto input[type="checkbox"]:checked');
-        checks.forEach(c => {
-            adicionais.push(c.value);
-            precoFinal += parseFloat(c.dataset.preco);
-            c.checked = false; // Desmarca para a próxima vez
+        // 2. Vai lá na aba "extras" ver o que está marcado (mesmo se a aba estiver escondida)
+        let checks = document.querySelectorAll('#extras input[type="checkbox"]:checked');
+        
+        checks.forEach(check => {
+            listaAdicionais.push(check.value);
+            precoFinal += parseFloat(check.dataset.preco);
+            // check.checked = false; // Opcional: desmarca após adicionar
         });
 
-        let nomeCompleto = nome + (adicionais.length > 0 ? " + " + adicionais.join(", ") : "");
-        
-        let obs = card.querySelector(".obs");
-        if(obs && obs.value.trim()) {
-            nomeCompleto += " (" + obs.value + ")";
-            obs.value = ""; // Limpa a obs
+        // 3. Monta o nome com extras e observação
+        let nomeCompleto = nomeItem;
+        if (listaAdicionais.length > 0) {
+            nomeCompleto += " + " + listaAdicionais.join(", ");
         }
 
-        // Adicionar ao Array
-        let existente = carrinho.find(i => i.nome === nomeCompleto);
-        if(existente) {
-            existente.qtd++;
-        } else {
-            carrinho.push({ nome: nomeCompleto, preco: precoFinal, qtd: 1 });
+        let campoObs = card.querySelector(".obs");
+        if (campoObs && campoObs.value.trim() !== "") {
+            nomeCompleto += " (" + campoObs.value + ")";
         }
 
+        // 4. Adiciona no carrinho
+        carrinho.push({ nome: nomeCompleto, preco: precoFinal });
         totalGlobal += precoFinal;
-        atualizarCarrinho();
+
+        // 5. Limpa os campos para o próximo item
+        if(campoObs) campoObs.value = "";
+        // checks.forEach(c => c.checked = false); // Ative se quiser limpar os extras após cada lanche
+
+        atualizarInterface();
+        alert("Adicionado: " + nomeItem);
     }
 
-    function atualizarCarrinho() {
-        let lista = document.getElementById("lista");
-        lista.innerHTML = "";
+    function atualizarInterface() {
+        let listaUI = document.getElementById("lista");
+        listaUI.innerHTML = "";
+        
         carrinho.forEach(item => {
             let li = document.createElement("li");
-            li.textContent = `${item.qtd}x ${item.nome} - R$ ${(item.preco * item.qtd).toFixed(2)}`;
-            lista.appendChild(li);
+            li.textContent = `${item.nome} - R$ ${item.preco.toFixed(2)}`;
+            listaUI.appendChild(li);
         });
+
         document.getElementById("total").textContent = "Total: R$ " + totalGlobal.toFixed(2);
     }
 
     function limparCarrinho() {
-        carrinho = []; totalGlobal = 0; atualizarCarrinho();
+        carrinho = [];
+        totalGlobal = 0;
+        atualizarInterface();
     }
 
     function finalizarPedido() {
-        if(carrinho.length === 0) return alert("Carrinho vazio!");
+        if(carrinho.length === 0) return alert("Adicione um item primeiro!");
+        
         let fone = "53999816127";
-        let texto = "*Pedido Lanchonete da Jana*\n\n";
-        carrinho.forEach(i => texto += `*${i.qtd}x* ${i.nome} - R$ ${(i.preco * i.qtd).toFixed(2)}\n`);
-        texto += `\n*Total: R$ ${totalGlobal.toFixed(2)}*`;
-        window.open(`https://wa.me/${fone}?text=${encodeURIComponent(texto)}`);
+        let msg = "*Novo Pedido - Lanchonete da Jana*\n\n";
+        
+        carrinho.forEach(item => {
+            msg += `• ${item.nome} - R$ ${item.preco.toFixed(2)}\n`;
+        });
+        
+        msg += `\n*Total: R$ ${totalGlobal.toFixed(2)}*`;
+        
+        window.open(`https://wa.me/${fone}?text=${encodeURIComponent(msg)}`);
     }
 </script>
 
