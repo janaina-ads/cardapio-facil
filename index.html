@@ -259,7 +259,7 @@ function adicionarComExtras(botao){
   });
 
   if(listaExtras.length > 0){
-    nomeFinal += " | Extras: " + listaExtras.join(", ");
+    nomeFinal += " • Extras: " + listaExtras.join(", ");
   }
 
   if(observacao.trim() !== ""){
@@ -267,9 +267,7 @@ function adicionarComExtras(botao){
   }
 
   adicionar(nomeFinal, precoFinal);
-
-  extras.forEach(e => e.checked = false);
-
+  
   if(produto.querySelector(".obs")){
     produto.querySelector(".obs").value = "";
   }
