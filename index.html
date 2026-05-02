@@ -243,39 +243,50 @@ function limparCarrinho(){
 
 /* ADICIONAR COM EXTRAS */
 function adicionarComExtras(btn){
-  let p = btn.closest(".produto");
+  try {
 
-  let nome = p.querySelector("h3").textContent;
-  let preco = parseFloat(p.querySelector("p").textContent.replace("R$ ",""));
+    let p = btn.closest(".produto");
 
-  let obsInput = p.querySelector(".obs");
-  let obs = obsInput ? obsInput.value : "";
+    let nome = p.querySelector("h3").textContent;
 
-  // PEGA EXTRAS GLOBAIS (SEU MODELO ATUAL)
-  let extras = document.querySelectorAll('#extras input[type="checkbox"]:checked');
+    // PEGA PREÇO COM SEGURANÇA
+    let precoTexto = p.querySelector("p").textContent;
+    let preco = Number(precoTexto.replace(/[^\d.,]/g, "").replace(",", "."));
 
-  let nomesExtras = [];
+    let obsInput = p.querySelector(".obs");
+    let obs = obsInput ? obsInput.value : "";
 
-  extras.forEach(e=>{
-    nomesExtras.push(e.value);
-    preco += parseFloat(e.dataset.preco || 0);
-  });
+    // EXTRAS GLOBAIS (seu modelo atual)
+    let extras = document.querySelectorAll('#extras input[type="checkbox"]:checked');
 
-  if(nomesExtras.length > 0){
-    nome += " + " + nomesExtras.join(", ");
+    let nomesExtras = [];
+
+    extras.forEach(e=>{
+      nomesExtras.push(e.value);
+      preco += Number(e.dataset.preco || 0);
+    });
+
+    if(nomesExtras.length > 0){
+      nome += " + " + nomesExtras.join(", ");
+    }
+
+    if(obs.trim()){
+      nome += " (" + obs + ")";
+    }
+
+    // 👇 ESSA LINHA PRECISA EXISTIR E FUNCIONAR
+    adicionar(nome, preco);
+
+    // LIMPA EXTRAS
+    extras.forEach(e => e.checked = false);
+
+    // LIMPA OBS
+    if(obsInput) obsInput.value = "";
+
+  } catch (erro) {
+    console.error("Erro ao adicionar:", erro);
+    alert("Erro ao adicionar item. Veja o console (F12).");
   }
-
-  if(obs.trim()){
-    nome += " (" + obs + ")";
-  }
-
-  adicionar(nome, preco);
-
-  // LIMPA EXTRAS
-  extras.forEach(e => e.checked = false);
-
-  // LIMPA OBS
-  if(obsInput) obsInput.value = "";
 }
 /* FINALIZAR */
 function finalizarPedido(){
