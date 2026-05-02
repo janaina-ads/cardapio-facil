@@ -243,42 +243,39 @@ function limparCarrinho(){
 
 /* ADICIONAR COM EXTRAS */
 function adicionarComExtras(btn){
-  let p = btn.parentElement;
+  let p = btn.closest(".produto");
 
   let nome = p.querySelector("h3").textContent;
   let preco = parseFloat(p.querySelector("p").textContent.replace("R$ ",""));
 
-  let obs = p.querySelector(".obs")?.value || "";
+  let obsInput = p.querySelector(".obs");
+  let obs = obsInput ? obsInput.value : "";
 
-  // PEGA EXTRAS SOMENTE DO PRODUTO CLICADO
-  let extras = p.querySelectorAll("input:checked");
+  // PEGA EXTRAS GLOBAIS (SEU MODELO ATUAL)
+  let extras = document.querySelectorAll('#extras input[type="checkbox"]:checked');
 
   let nomesExtras = [];
 
   extras.forEach(e=>{
     nomesExtras.push(e.value);
-    preco += parseFloat(e.dataset.preco);
+    preco += parseFloat(e.dataset.preco || 0);
   });
 
-  // ADICIONA EXTRAS NO NOME
   if(nomesExtras.length > 0){
     nome += " + " + nomesExtras.join(", ");
   }
 
-  // ADICIONA OBSERVAÇÃO
   if(obs.trim()){
     nome += " (" + obs + ")";
   }
 
-  // ADICIONA AO CARRINHO
   adicionar(nome, preco);
 
-  // LIMPA EXTRAS MARCADOS
+  // LIMPA EXTRAS
   extras.forEach(e => e.checked = false);
 
   // LIMPA OBS
-  let campoObs = p.querySelector(".obs");
-  if(campoObs) campoObs.value = "";
+  if(obsInput) obsInput.value = "";
 }
 /* FINALIZAR */
 function finalizarPedido(){
