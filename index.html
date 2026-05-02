@@ -10,7 +10,7 @@ body {
   font-family: Arial;
   background: #f4f6f8;
   margin: 0;
-  padding-bottom: 100px; /* corrigido */
+  padding-bottom: 120px;
 }
 
 h1 {
@@ -21,7 +21,7 @@ h1 {
   text-align: center;
 }
 
-/* MENU DE CATEGORIAS */
+/* MENU */
 .categorias {
   display: flex;
   gap: 10px;
@@ -39,13 +39,13 @@ h1 {
   border-radius: 20px;
   padding: 10px 15px;
   border: none;
-  white-space: nowrap;
   cursor: pointer;
 }
 
+/* CONTAINER */
 .container {
   padding: 15px;
-  padding-bottom: 180px; 
+  padding-bottom: 220px;
 }
 
 .produto {
@@ -84,10 +84,10 @@ button {
   z-index: 999;
 }
 
-/* BOTÃO WHATSAPP */
+/* WHATS */
 #finalizar {
   position: fixed;
-  bottom: 20px;
+  bottom: 90px;
   right: 15px;
   padding: 15px 20px;
   border-radius: 50px;
@@ -96,22 +96,12 @@ button {
   color: white;
   border: none;
   z-index: 1000;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  cursor: pointer;
-}
-
-#finalizar:hover {
-  background-color: #1ebe5d;
 }
 
 /* MOBILE */
 @media (max-width: 600px) {
   #finalizar {
-    bottom: 200px;
-  }
-
-  .container {
-    padding-bottom: 220px;
+    bottom: 110px;
   }
 }
 </style>
@@ -158,7 +148,7 @@ button {
 </div>
 
 <!-- BEBIDAS -->
-<div id="bebidas">
+<div id="bebidas" style="display:none;">
 <h2>🥤 Bebidas</h2>
 
 <div class="produto">
@@ -172,7 +162,7 @@ button {
 </div>
 
 <!-- EXTRAS -->
-<div id="extras">
+<div id="extras" style="display:none;">
 <h2>➕ Adicionais</h2>
 
 <label><input type="checkbox" value="Queijo" data-preco="2"> Queijo (+2)</label><br>
@@ -190,7 +180,6 @@ button {
 <button onclick="limparCarrinho()">Limpar</button>
 </div>
 
-<!-- BOTÃO -->
 <button id="finalizar" onclick="finalizarPedido()">
 📲 Pedir no WhatsApp
 </button>
@@ -198,6 +187,9 @@ button {
 <script>
 let carrinho = [];
 let total = 0;
+
+// INICIA mostrando lanches
+window.onload = () => mostrarCategoria('lanches');
 
 function mostrarCategoria(categoria){
   document.getElementById("lanches").style.display = "none";
@@ -246,38 +238,37 @@ function adicionarComExtras(botao){
   let preco = parseFloat(produto.querySelector("p").textContent.replace("R$ ",""));
 
   let extras = document.querySelectorAll("#extras input:checked");
-  let observacao = produto.querySelector(".obs")?.value || "";
+  let obs = produto.querySelector(".obs")?.value || "";
 
   let nomeFinal = nome;
   let precoFinal = preco;
 
   let listaExtras = [];
 
-  extras.forEach(extra=>{
-    listaExtras.push(extra.value);
-    precoFinal += parseFloat(extra.dataset.preco);
+  extras.forEach(e=>{
+    listaExtras.push(e.value);
+    precoFinal += parseFloat(e.dataset.preco);
   });
 
   if(listaExtras.length > 0){
     nomeFinal += " • Extras: " + listaExtras.join(", ");
   }
 
-  if(observacao.trim() !== ""){
-    nomeFinal += " (" + observacao + ")";
+  if(obs.trim() !== ""){
+    nomeFinal += " (" + obs + ")";
   }
 
   adicionar(nomeFinal, precoFinal);
-  
+
   if(produto.querySelector(".obs")){
     produto.querySelector(".obs").value = "";
   }
 }
+
 function finalizarPedido(){
   let telefone = "53999816127";
 
-  let mesa = new URLSearchParams(window.location.search).get("mesa") || "Não informada";
-
-  let msg = "Mesa: " + mesa + "\n\nPedido:\n";
+  let msg = "Pedido:\n";
 
   carrinho.forEach(item=>{
     msg += "- " + item.nome + " (" + item.quantidade + "x)\n";
