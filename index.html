@@ -245,44 +245,48 @@ function limparCarrinho(){
 function adicionarComExtras(btn){
   try {
     let p = btn.closest(".produto");
+    let nomeBase = p.querySelector("h2").textContent; // Nome do lanche (X-Burger, etc)
 
-    // Buscando h2 (ajuste conforme o que estiver no seu HTML)
-    let nomeElemento = p.querySelector("h2");
-    if (!nomeElemento) throw new Error("Não encontrei o título do produto.");
-    let nome = nomeElemento.textContent;
-
-    // Pega preço e limpa o texto para virar número
+    // Pega o preço base do lanche
     let precoTexto = p.querySelector("p").textContent;
-    let preco = Number(precoTexto.replace("R$", "").replace(",", ".").trim());
+    let precoLanche = Number(precoTexto.replace(/[^\d.,]/g, "").replace(",", "."));
+    
+    let precoTotalItem = precoLanche;
 
+    // Observação
     let obsInput = p.querySelector(".obs");
     let obs = obsInput ? obsInput.value : "";
 
+    // Pega os EXTRAS marcados na aba de extras
     let extras = document.querySelectorAll('#extras input[type="checkbox"]:checked');
     let nomesExtras = [];
 
     extras.forEach(e => {
       nomesExtras.push(e.value);
-      preco += Number(e.dataset.preco || 0);
+      precoTotalItem += Number(e.dataset.preco || 0); // Soma o valor do extra
     });
 
+    // Monta o nome final que aparecerá no carrinho
+    let nomeFinal = nomeBase;
     if(nomesExtras.length > 0){
-      nome += " + " + nomesExtras.join(", ");
+      nomeFinal += " + " + nomesExtras.join(", ");
     }
 
     if(obs.trim()){
-      nome += " (" + obs + ")";
+      nomeFinal += " (" + obs + ")";
     }
 
-    adicionar(nome, preco);
+    // Adiciona ao carrinho com o preço já somado
+    adicionar(nomeFinal, precoTotalItem);
 
-    // Limpa os campos após adicionar
+    // Limpa os extras e a observação para o próximo lanche
     extras.forEach(e => e.checked = false);
     if(obsInput) obsInput.value = "";
+    
+    alert("Adicionado ao carrinho!");
 
   } catch (erro) {
-    console.error("Erro detalhado:", erro);
-    alert("Erro ao adicionar item. Verifique se o nome do produto está entre tags <h2>");
+    console.error("Erro:", erro);
   }
 }
 /* FINALIZAR */
