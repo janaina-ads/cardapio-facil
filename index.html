@@ -251,10 +251,16 @@ function adicionarComExtras(botao){
   let nomeFinal = nome;
   let precoFinal = preco;
 
+  let listaExtras = [];
+
   extras.forEach(extra=>{
-    nomeFinal += " + " + extra.value;
+    listaExtras.push(extra.value);
     precoFinal += parseFloat(extra.dataset.preco);
   });
+
+  if(listaExtras.length > 0){
+    nomeFinal += " | Extras: " + listaExtras.join(", ");
+  }
 
   if(observacao.trim() !== ""){
     nomeFinal += " (" + observacao + ")";
@@ -263,11 +269,11 @@ function adicionarComExtras(botao){
   adicionar(nomeFinal, precoFinal);
 
   extras.forEach(e => e.checked = false);
+
   if(produto.querySelector(".obs")){
     produto.querySelector(".obs").value = "";
   }
 }
-
 function finalizarPedido(){
   let telefone = "53999816127";
 
