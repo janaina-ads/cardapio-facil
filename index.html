@@ -242,39 +242,44 @@ function limparCarrinho(){
 }
 
 /* ADICIONAR COM EXTRAS */
-function adicionarComExtras(botao){
-  let produto = botao.parentElement;
+function adicionarComExtras(btn){
+  let p = btn.parentElement;
 
-  let nome = produto.querySelector("h2").textContent;
-  let preco = parseFloat(produto.querySelector("p").textContent.replace("R$ ",""));
+  let nome = p.querySelector("h3").textContent;
+  let preco = parseFloat(p.querySelector("p").textContent.replace("R$ ",""));
 
-  let extras = document.querySelectorAll("#extras input:checked");
-  let obs = produto.querySelector(".obs").value;
+  let obs = p.querySelector(".obs")?.value || "";
 
-  let nomeFinal = nome;
-  let precoFinal = preco;
+  // PEGA EXTRAS SOMENTE DO PRODUTO CLICADO
+  let extras = p.querySelectorAll("input:checked");
 
-  let listaExtras = [];
+  let nomesExtras = [];
 
   extras.forEach(e=>{
-    listaExtras.push(e.value);
-    precoFinal += parseFloat(e.dataset.preco);
+    nomesExtras.push(e.value);
+    preco += parseFloat(e.dataset.preco);
   });
 
-  if(listaExtras.length > 0){
-    nomeFinal += " + " + listaExtras.join(", ");
+  // ADICIONA EXTRAS NO NOME
+  if(nomesExtras.length > 0){
+    nome += " + " + nomesExtras.join(", ");
   }
 
-  if(obs.trim() !== ""){
-    nomeFinal += " (" + obs + ")";
+  // ADICIONA OBSERVAÇÃO
+  if(obs.trim()){
+    nome += " (" + obs + ")";
   }
 
-  adicionar(nomeFinal, precoFinal);
+  // ADICIONA AO CARRINHO
+  adicionar(nome, preco);
 
-  extras.forEach(e=>e.checked=false);
-  produto.querySelector(".obs").value="";
+  // LIMPA EXTRAS MARCADOS
+  extras.forEach(e => e.checked = false);
+
+  // LIMPA OBS
+  let campoObs = p.querySelector(".obs");
+  if(campoObs) campoObs.value = "";
 }
-
 /* FINALIZAR */
 function finalizarPedido(){
   let telefone = "53999816127";
