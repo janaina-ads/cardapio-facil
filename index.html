@@ -244,24 +244,24 @@ function limparCarrinho(){
 /* ADICIONAR COM EXTRAS */
 function adicionarComExtras(btn){
   try {
-
     let p = btn.closest(".produto");
 
-    let nome = p.querySelector("h3").textContent;
+    // Buscando h2 (ajuste conforme o que estiver no seu HTML)
+    let nomeElemento = p.querySelector("h2");
+    if (!nomeElemento) throw new Error("Não encontrei o título do produto.");
+    let nome = nomeElemento.textContent;
 
-    // PEGA PREÇO COM SEGURANÇA
+    // Pega preço e limpa o texto para virar número
     let precoTexto = p.querySelector("p").textContent;
-    let preco = Number(precoTexto.replace(/[^\d.,]/g, "").replace(",", "."));
+    let preco = Number(precoTexto.replace("R$", "").replace(",", ".").trim());
 
     let obsInput = p.querySelector(".obs");
     let obs = obsInput ? obsInput.value : "";
 
-    // EXTRAS GLOBAIS (seu modelo atual)
     let extras = document.querySelectorAll('#extras input[type="checkbox"]:checked');
-
     let nomesExtras = [];
 
-    extras.forEach(e=>{
+    extras.forEach(e => {
       nomesExtras.push(e.value);
       preco += Number(e.dataset.preco || 0);
     });
@@ -274,18 +274,15 @@ function adicionarComExtras(btn){
       nome += " (" + obs + ")";
     }
 
-    // 👇 ESSA LINHA PRECISA EXISTIR E FUNCIONAR
     adicionar(nome, preco);
 
-    // LIMPA EXTRAS
+    // Limpa os campos após adicionar
     extras.forEach(e => e.checked = false);
-
-    // LIMPA OBS
     if(obsInput) obsInput.value = "";
 
   } catch (erro) {
-    console.error("Erro ao adicionar:", erro);
-    alert("Erro ao adicionar item. Veja o console (F12).");
+    console.error("Erro detalhado:", erro);
+    alert("Erro ao adicionar item. Verifique se o nome do produto está entre tags <h2>");
   }
 }
 /* FINALIZAR */
