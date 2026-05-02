@@ -10,6 +10,7 @@ body {
   font-family: Arial;
   background: #f4f6f8;
   margin: 0;
+  padding-bottom: 100px; /* corrigido */
 }
 
 h1 {
@@ -18,6 +19,28 @@ h1 {
   padding: 20px;
   margin: 0;
   text-align: center;
+}
+
+/* MENU DE CATEGORIAS */
+.categorias {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  background: white;
+  overflow-x: auto;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.categorias button {
+  background: #eee;
+  color: black;
+  border-radius: 20px;
+  padding: 10px 15px;
+  border: none;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 .container {
@@ -49,8 +72,8 @@ button {
   width: 100%;
   margin-top: 10px;
 }
-body {
-  padding-bottom: 100px;
+
+/* CARRINHO */
 #carrinho {
   position: fixed;
   bottom: 0;
@@ -77,11 +100,11 @@ body {
   cursor: pointer;
 }
 
-
 #finalizar:hover {
   background-color: #1ebe5d;
-
 }
+
+/* MOBILE */
 @media (max-width: 600px) {
   #finalizar {
     bottom: 200px;
@@ -89,9 +112,8 @@ body {
 
   .container {
     padding-bottom: 220px;
- }
+  }
 }
-
 </style>
 </head>
 
@@ -99,59 +121,76 @@ body {
 
 <h1>🍔 Lanchonete da Jana</h1>
 
+<!-- CATEGORIAS -->
+<div class="categorias">
+  <button onclick="mostrarCategoria('lanches')">🍔 Lanches</button>
+  <button onclick="mostrarCategoria('bebidas')">🥤 Bebidas</button>
+  <button onclick="mostrarCategoria('extras')">➕ Extras</button>
+</div>
+
 <div class="container">
-<h2>🍔 Lanches</h2>  
+
+<!-- LANCHES -->
+<div id="lanches">
+<h2>🍔 Lanches</h2>
+
 <div class="produto">
-<img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=500" alt="X-Burger">
+<img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=500">
 <h2>X-Burger</h2>
 <p>R$ 15</p>
-
 <button onclick="adicionarComExtras(this)">Adicionar</button>
 </div>
 
 <div class="produto">
-<img src="https://images.unsplash.com/photo-1606755456206-b25206cde27e"alt="Bauru">
+<img src="https://images.unsplash.com/photo-1606755456206-b25206cde27e">
 <h2>Bauru</h2>
 <p>R$ 14</p>
-
-
 <input type="text" placeholder="Observação" class="obs">
-
 <button onclick="adicionarComExtras(this)">Adicionar</button>
 </div>
 
 <div class="produto">
-<img src="https://images.unsplash.com/photo-1551782450-17144efb9c50" alt="Cachorro Quente">
+<img src="https://images.unsplash.com/photo-1551782450-17144efb9c50">
 <h2>Cachorro Quente</h2>
 <p>R$ 12</p>
-
 <button onclick="adicionarComExtras(this)">Adicionar</button>
 </div>
-<h2>🥤 Bebidas</h2>
-<div class="produto">
- <img src="https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=500" alt="Coca-Cola">
-  <h2>Coca-Cola</h2>
-  <p>R$ 8</p>
-
-
-  <input type="text" placeholder="Observação" class="obs">
-
-  <button onclick="adicionarComExtras(this)">Adicionar</button>
 </div>
+
+<!-- BEBIDAS -->
+<div id="bebidas">
+<h2>🥤 Bebidas</h2>
+
+<div class="produto">
+<img src="https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=500">
+<h2>Coca-Cola</h2>
+<p>R$ 8</p>
+<input type="text" placeholder="Observação" class="obs">
+<button onclick="adicionarComExtras(this)">Adicionar</button>
+</div>
+
+</div>
+
+<!-- EXTRAS -->
+<div id="extras">
 <h2>➕ Adicionais</h2>
 
-<div id="extras">
-  <label><input type="checkbox" value="Queijo" data-preco="2"> Queijo (+2)</label><br>
-  <label><input type="checkbox" value="Bacon" data-preco="3"> Bacon (+3)</label><br>
-  <label><input type="checkbox" value="Ovo" data-preco="2"> Ovo (+2)</label>
+<label><input type="checkbox" value="Queijo" data-preco="2"> Queijo (+2)</label><br>
+<label><input type="checkbox" value="Bacon" data-preco="3"> Bacon (+3)</label><br>
+<label><input type="checkbox" value="Ovo" data-preco="2"> Ovo (+2)</label>
+
 </div>
 
+</div>
+
+<!-- CARRINHO -->
 <div id="carrinho">
 <ul id="lista"></ul>
 <p id="total">Total: R$ 0</p>
 <button onclick="limparCarrinho()">Limpar</button>
 </div>
 
+<!-- BOTÃO -->
 <button id="finalizar" onclick="finalizarPedido()">
 📲 Pedir no WhatsApp
 </button>
@@ -159,6 +198,14 @@ body {
 <script>
 let carrinho = [];
 let total = 0;
+
+function mostrarCategoria(categoria){
+  document.getElementById("lanches").style.display = "none";
+  document.getElementById("bebidas").style.display = "none";
+  document.getElementById("extras").style.display = "none";
+
+  document.getElementById(categoria).style.display = "block";
+}
 
 function adicionar(nome, preco){
   let itemExistente = carrinho.find(item => item.nome === nome);
@@ -179,14 +226,13 @@ function atualizarTela(){
 
   carrinho.forEach(item=>{
     let li = document.createElement("li");
-
     li.textContent = item.nome + " (" + item.quantidade + "x) - R$ " + (item.preco * item.quantidade);
-
     lista.appendChild(li);
   });
 
   document.getElementById("total").textContent = "Total: R$ " + total;
 }
+
 function limparCarrinho(){
   carrinho = [];
   total = 0;
@@ -205,26 +251,22 @@ function adicionarComExtras(botao){
   let nomeFinal = nome;
   let precoFinal = preco;
 
-  
   extras.forEach(extra=>{
     nomeFinal += " + " + extra.value;
     precoFinal += parseFloat(extra.dataset.preco);
   });
 
-  
   if(observacao.trim() !== ""){
     nomeFinal += " (" + observacao + ")";
   }
 
   adicionar(nomeFinal, precoFinal);
 
-  
   extras.forEach(e => e.checked = false);
   if(produto.querySelector(".obs")){
     produto.querySelector(".obs").value = "";
   }
 }
-
 
 function finalizarPedido(){
   let telefone = "53999816127";
@@ -234,7 +276,7 @@ function finalizarPedido(){
   let msg = "Mesa: " + mesa + "\n\nPedido:\n";
 
   carrinho.forEach(item=>{
-    msg += "- " + item.nome + "\n";
+    msg += "- " + item.nome + " (" + item.quantidade + "x)\n";
   });
 
   msg += "\nTotal: R$ " + total;
