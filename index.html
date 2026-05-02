@@ -6,369 +6,163 @@
     <title>Cardápio - Lanchonete da Jana</title>
 
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-            color: #333;
-        }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f6f8; margin: 0; padding-bottom: 200px; }
+        h1 { background: #25D366; color: white; padding: 20px; margin: 0; text-align: center; }
+        
+        .categorias { display: flex; gap: 10px; padding: 15px; background: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow-x: auto; }
+        .categorias button { background: #eee; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; }
 
-        /* TOPO */
-        h1 {
-            background: #25D366;
-            color: white;
-            padding: 20px;
-            margin: 0;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+        .container { padding: 15px; }
+        .produto { background: white; margin-bottom: 20px; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .produto img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; }
+        
+        .preco { color: #25D366; font-weight: bold; font-size: 1.2rem; margin: 5px 0; }
+        
+        /* AREA DE EXTRAS DENTRO DO PRODUTO */
+        .extras-produto { background: #f9f9f9; padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px dashed #ccc; }
+        .extras-produto label { display: block; margin: 5px 0; font-size: 0.9rem; cursor: pointer; }
 
-        /* CATEGORIAS */
-        .categorias {
-            display: flex;
-            gap: 10px;
-            padding: 15px;
-            background: white;
-            overflow-x: auto;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
+        .obs { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-top: 10px; box-sizing: border-box; }
+        .btn-add { background: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer; font-weight: bold; }
 
-        .categorias button {
-            background: #eee;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            white-space: nowrap;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .categorias button:hover {
-            background: #25D366;
-            color: white;
-        }
-
-        /* CONTAINER */
-        .container {
-            padding: 15px;
-            padding-bottom: 200px; /* Espaço para o carrinho fixo */
-        }
-
-        /* PRODUTOS */
-        .produto {
-            background: white;
-            margin-bottom: 20px;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        .produto img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .produto h2 {
-            margin: 10px 0 5px 0;
-            font-size: 1.4rem;
-        }
-
-        .produto p {
-            color: #25D366;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin: 5px 0;
-        }
-
-        .obs {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            margin-top: 10px;
-        }
-
-        /* ADICIONAIS NA ABA EXTRAS */
-        #extras label {
-            display: block;
-            background: white;
-            padding: 15px;
-            margin-bottom: 5px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        /* BOTÕES */
-        .btn-add {
-            background: #25D366;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            width: 100%;
-            margin-top: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1rem;
-        }
-
-        /* CARRINHO FIXO */
-        #carrinho {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: white;
-            padding: 15px;
-            border-top: 3px solid #25D366;
-            z-index: 999;
-            box-sizing: border-box;
-        }
-
-        #lista {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            max-height: 100px;
-            overflow-y: auto;
-            font-size: 0.9rem;
-        }
-
-        #lista li {
-            border-bottom: 1px solid #eee;
-            padding: 5px 0;
-        }
-
-        .total-area {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .btn-limpar {
-            background: #ff4d4d;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /* BOTÃO WHATSAPP */
-        #finalizar {
-            background: #128C7E;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 8px;
-            width: 100%;
-            margin-top: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
+        /* CARRINHO */
+        #carrinho { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; border-top: 3px solid #25D366; box-sizing: border-box; }
+        #lista { list-style: none; padding: 0; max-height: 80px; overflow-y: auto; font-size: 0.9rem; }
+        .total-area { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; }
+        #finalizar { background: #128C7E; color: white; border: none; padding: 15px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <h1>🍔 Lanchonete da Jana</h1>
 
-<!-- CATEGORIAS -->
 <div class="categorias">
     <button onclick="mostrar('lanches')">🍔 Lanches</button>
     <button onclick="mostrar('bebidas')">🥤 Bebidas</button>
-    <button onclick="mostrar('extras')">➕ Extras</button>
 </div>
 
 <div class="container">
-
     <!-- SEÇÃO LANCHES -->
     <div id="lanches">
-        <h2>Cardápio de Lanches</h2>
-        
         <div class="produto">
             <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=500">
             <h2>X-Burger</h2>
-            <p>R$ 15,00</p>
-            <input type="text" class="obs" placeholder="Alguma observação?">
-            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
+            <p class="preco">R$ 15,00</p>
+            
+            <div class="extras-produto">
+                <strong>Adicionais:</strong>
+                <label><input type="checkbox" value="Queijo" data-preco="2"> + Queijo (R$ 2,00)</label>
+                <label><input type="checkbox" value="Bacon" data-preco="3"> + Bacon (R$ 3,00)</label>
+            </div>
+
+            <input type="text" class="obs" placeholder="Observações...">
+            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar</button>
         </div>
 
         <div class="produto">
             <img src="https://images.unsplash.com/photo-1606755456206-b25206cde27e?w=500">
             <h2>Bauru</h2>
-            <p>R$ 14,00</p>
-            <input type="text" class="obs" placeholder="Alguma observação?">
-            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
-        </div>
+            <p class="preco">R$ 14,00</p>
+            
+            <div class="extras-produto">
+                <strong>Adicionais:</strong>
+                <label><input type="checkbox" value="Queijo" data-preco="2"> + Queijo (R$ 2,00)</label>
+                <label><input type="checkbox" value="Ovo" data-preco="2"> + Ovo (R$ 2,00)</label>
+            </div>
 
-        <div class="produto">
-            <img src="https://images.unsplash.com/photo-1551782450-17144efb9c50?w=500">
-            <h2>Cachorro Quente</h2>
-            <p>R$ 12,00</p>
-            <input type="text" class="obs" placeholder="Alguma observação?">
-            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
+            <input type="text" class="obs" placeholder="Observações...">
+            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar</button>
         </div>
     </div>
 
     <!-- SEÇÃO BEBIDAS -->
     <div id="bebidas" style="display:none">
-        <h2>Bebidas Geladas</h2>
         <div class="produto">
             <img src="https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=500">
             <h2>Coca-Cola</h2>
-            <p>R$ 8,00</p>
-            <input type="text" class="obs" placeholder="Ex: Gelo e limão">
-            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
+            <p class="preco">R$ 8,00</p>
+            <input type="text" class="obs" placeholder="Ex: Com gelo">
+            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar</button>
         </div>
     </div>
-
-    <!-- SEÇÃO EXTRAS -->
-    <div id="extras" style="display:none">
-        <h2>➕ Escolha seus Adicionais</h2>
-        <p><small>Marque aqui e depois adicione o lanche no carrinho!</small></p>
-        <label><input type="checkbox" value="Queijo" data-preco="2"> 🧀 Queijo (+ R$ 2,00)</label>
-        <label><input type="checkbox" value="Bacon" data-preco="3"> 🥓 Bacon (+ R$ 3,00)</label>
-        <label><input type="checkbox" value="Ovo" data-preco="2"> 🍳 Ovo (+ R$ 2,00)</label>
-    </div>
-
 </div>
 
-<!-- AREA DO CARRINHO -->
 <div id="carrinho">
-    <ul id="lista">
-        <li>Seu carrinho está vazio...</li>
-    </ul>
+    <ul id="lista"><li>Carrinho vazio</li></ul>
     <div class="total-area">
         <strong id="total">Total: R$ 0,00</strong>
-        <button class="btn-limpar" onclick="limparCarrinho()">Limpar</button>
+        <button onclick="limparCarrinho()" style="border:none; background:none; color:red; cursor:pointer;">Limpar</button>
     </div>
-    <button id="finalizar" onclick="finalizarPedido()">📲 Finalizar Pedido no WhatsApp</button>
+    <button id="finalizar" onclick="finalizarPedido()">📲 Pedir no WhatsApp</button>
 </div>
 
 <script>
     let carrinho = [];
     let totalGlobal = 0;
 
-    // Trocar de categoria
     function mostrar(id) {
-        document.getElementById("lanches").style.display = "none";
-        document.getElementById("bebidas").style.display = "none";
-        document.getElementById("extras").style.display = "none";
-        document.getElementById(id).style.display = "block";
+        document.getElementById("lanches").style.display = id === "lanches" ? "block" : "none";
+        document.getElementById("bebidas").style.display = id === "bebidas" ? "block" : "none";
     }
 
-    // Adicionar item ao carrinho
-    function adicionarNoArray(nome, preco) {
-        let itemExistente = carrinho.find(item => item.nome === nome);
+    function adicionarComExtras(botao) {
+        let card = botao.closest(".produto");
+        let nome = card.querySelector("h2").textContent;
+        let precoBase = parseFloat(card.querySelector(".preco").textContent.replace("R$", "").replace(",", "."));
+        
+        let precoFinal = precoBase;
+        let adicionais = [];
 
-        if (itemExistente) {
-            itemExistente.quantidade++;
-        } else {
-            carrinho.push({ nome: nome, preco: preco, quantidade: 1 });
-        }
-
-        totalGlobal += preco;
-        atualizarVisual();
-    }
-
-    // Atualiza a lista na tela
-    function atualizarVisual() {
-        let listaUI = document.getElementById("lista");
-        listaUI.innerHTML = "";
-
-        if (carrinho.length === 0) {
-            listaUI.innerHTML = "<li>Seu carrinho está vazio...</li>";
-        }
-
-        carrinho.forEach(item => {
-            let li = document.createElement("li");
-            li.textContent = `${item.quantidade}x ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2)}`;
-            listaUI.appendChild(li);
+        // Agora ele busca apenas os extras DENTRO deste card específico
+        let checks = card.querySelectorAll('.extras-produto input[type="checkbox"]:checked');
+        checks.forEach(c => {
+            adicionais.push(c.value);
+            precoFinal += parseFloat(c.dataset.preco);
+            c.checked = false; // Desmarca para a próxima vez
         });
 
+        let nomeCompleto = nome + (adicionais.length > 0 ? " + " + adicionais.join(", ") : "");
+        
+        let obs = card.querySelector(".obs");
+        if(obs && obs.value.trim()) {
+            nomeCompleto += " (" + obs.value + ")";
+            obs.value = ""; // Limpa a obs
+        }
+
+        // Adicionar ao Array
+        let existente = carrinho.find(i => i.nome === nomeCompleto);
+        if(existente) {
+            existente.qtd++;
+        } else {
+            carrinho.push({ nome: nomeCompleto, preco: precoFinal, qtd: 1 });
+        }
+
+        totalGlobal += precoFinal;
+        atualizarCarrinho();
+    }
+
+    function atualizarCarrinho() {
+        let lista = document.getElementById("lista");
+        lista.innerHTML = "";
+        carrinho.forEach(item => {
+            let li = document.createElement("li");
+            li.textContent = `${item.qtd}x ${item.nome} - R$ ${(item.preco * item.qtd).toFixed(2)}`;
+            lista.appendChild(li);
+        });
         document.getElementById("total").textContent = "Total: R$ " + totalGlobal.toFixed(2);
     }
 
-    // Função principal de clique
-    function adicionarComExtras(botao) {
-        try {
-            let cardProduto = botao.closest(".produto");
-            
-            // Pegar Nome e Preço Base
-            let nomeLanche = cardProduto.querySelector("h2").textContent;
-            let textoPreco = cardProduto.querySelector("p").textContent;
-            let precoBase = parseFloat(textoPreco.replace("R$", "").replace(",", "."));
-
-            let precoFinal = precoBase;
-            let listaAdicionais = [];
-
-            // Verificar extras marcados na aba Extras
-            let checks = document.querySelectorAll('#extras input[type="checkbox"]:checked');
-            checks.forEach(check => {
-                listaAdicionais.push(check.value);
-                precoFinal += parseFloat(check.dataset.preco);
-            });
-
-            // Montar nome final
-            let nomeCompleto = nomeLanche;
-            if (listaAdicionais.length > 0) {
-                nomeCompleto += " + " + listaAdicionais.join(", ");
-            }
-
-            // Observação
-            let campoObs = cardProduto.querySelector(".obs");
-            if (campoObs && campoObs.value.trim() !== "") {
-                nomeCompleto += " (" + campoObs.value + ")";
-            }
-
-            // Enviar para o carrinho
-            adicionarNoArray(nomeCompleto, precoFinal);
-
-            // Limpar campos
-            checks.forEach(c => c.checked = false);
-            if (campoObs) campoObs.value = "";
-
-            alert("Adicionado com sucesso!");
-
-        } catch (erro) {
-            console.error(erro);
-            alert("Erro ao adicionar. Verifique o console.");
-        }
-    }
-
     function limparCarrinho() {
-        carrinho = [];
-        totalGlobal = 0;
-        atualizarVisual();
+        carrinho = []; totalGlobal = 0; atualizarCarrinho();
     }
 
     function finalizarPedido() {
-        if (carrinho.length === 0) {
-            alert("Adicione pelo menos um item!");
-            return;
-        }
-
+        if(carrinho.length === 0) return alert("Carrinho vazio!");
         let fone = "53999816127";
-        let texto = "*Novo Pedido - Lanchonete da Jana*\n\n";
-
-        carrinho.forEach(item => {
-            texto += `*${item.quantidade}x* ${item.nome}\n`;
-            texto += `Subtotal: R$ ${(item.preco * item.quantidade).toFixed(2)}\n\n`;
-        });
-
-        texto += `*Total do Pedido: R$ ${totalGlobal.toFixed(2)}*`;
-
-        let link = `https://wa.me/${fone}?text=${encodeURIComponent(texto)}`;
-        window.open(link, '_blank');
+        let texto = "*Pedido Lanchonete da Jana*\n\n";
+        carrinho.forEach(i => texto += `*${i.qtd}x* ${i.nome} - R$ ${(i.preco * i.qtd).toFixed(2)}\n`);
+        texto += `\n*Total: R$ ${totalGlobal.toFixed(2)}*`;
+        window.open(`https://wa.me/${fone}?text=${encodeURIComponent(texto)}`);
     }
 </script>
 
