@@ -27,7 +27,6 @@ h1 {
   gap: 10px;
   padding: 10px;
   background: white;
-  overflow-x: auto;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -35,9 +34,8 @@ h1 {
 
 .categorias button {
   background: #eee;
-  color: black;
   border-radius: 20px;
-  padding: 10px 15px;
+  padding: 10px;
   border: none;
   cursor: pointer;
 }
@@ -81,28 +79,23 @@ button {
   background: white;
   padding: 10px;
   border-top: 2px solid #ddd;
-  z-index: 999;
 }
 
-/* WHATS */
+/* BOTÃO WHATS */
 #finalizar {
   position: fixed;
   bottom: 90px;
   right: 15px;
-  padding: 15px 20px;
+  padding: 15px;
   border-radius: 50px;
-  font-size: 16px;
-  background-color: #25D366;
+  background: #25D366;
   color: white;
   border: none;
-  z-index: 1000;
 }
 
-/* MOBILE */
-@media (max-width: 600px) {
-  #finalizar {
-    bottom: 110px;
-  }
+/* ESCONDER */
+.hidden {
+  display: none;
 }
 </style>
 </head>
@@ -111,11 +104,10 @@ button {
 
 <h1>🍔 Lanchonete da Jana</h1>
 
-<!-- CATEGORIAS -->
 <div class="categorias">
-  <button onclick="mostrarCategoria('lanches')">🍔 Lanches</button>
-  <button onclick="mostrarCategoria('bebidas')">🥤 Bebidas</button>
-  <button onclick="mostrarCategoria('extras')">➕ Extras</button>
+  <button onclick="mostrar('lanches')">🍔 Lanches</button>
+  <button onclick="mostrar('bebidas')">🥤 Bebidas</button>
+  <button onclick="mostrar('extras')">➕ Extras</button>
 </div>
 
 <div class="container">
@@ -125,44 +117,39 @@ button {
 <h2>🍔 Lanches</h2>
 
 <div class="produto">
-<img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=500">
-<h2>X-Burger</h2>
+<h3>X-Burger</h3>
 <p>R$ 15</p>
 <button onclick="adicionarComExtras(this)">Adicionar</button>
 </div>
 
 <div class="produto">
-<img src="https://images.unsplash.com/photo-1606755456206-b25206cde27e">
-<h2>Bauru</h2>
+<h3>Bauru</h3>
 <p>R$ 14</p>
-<input type="text" placeholder="Observação" class="obs">
+<input class="obs" placeholder="Observação">
 <button onclick="adicionarComExtras(this)">Adicionar</button>
 </div>
 
 <div class="produto">
-<img src="https://images.unsplash.com/photo-1551782450-17144efb9c50">
-<h2>Cachorro Quente</h2>
+<h3>Cachorro Quente</h3>
 <p>R$ 12</p>
 <button onclick="adicionarComExtras(this)">Adicionar</button>
 </div>
 </div>
 
 <!-- BEBIDAS -->
-<div id="bebidas" style="display:none;">
+<div id="bebidas" class="hidden">
 <h2>🥤 Bebidas</h2>
 
 <div class="produto">
-<img src="https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=500">
-<h2>Coca-Cola</h2>
+<h3>Coca-Cola</h3>
 <p>R$ 8</p>
-<input type="text" placeholder="Observação" class="obs">
+<input class="obs" placeholder="Observação">
 <button onclick="adicionarComExtras(this)">Adicionar</button>
 </div>
-
 </div>
 
 <!-- EXTRAS -->
-<div id="extras" style="display:none;">
+<div id="extras" class="hidden">
 <h2>➕ Adicionais</h2>
 
 <label><input type="checkbox" value="Queijo" data-preco="2"> Queijo (+2)</label><br>
@@ -177,107 +164,93 @@ button {
 <div id="carrinho">
 <ul id="lista"></ul>
 <p id="total">Total: R$ 0</p>
-<button onclick="limparCarrinho()">Limpar</button>
+<button onclick="limpar()">Limpar</button>
 </div>
 
-<button id="finalizar" onclick="finalizarPedido()">
-📲 Pedir no WhatsApp
-</button>
+<button id="finalizar" onclick="whats()">📲 Pedir</button>
 
 <script>
 let carrinho = [];
 let total = 0;
 
-// INICIA mostrando lanches
-window.onload = () => mostrarCategoria('lanches');
+function mostrar(sec){
+  document.getElementById("lanches").classList.add("hidden");
+  document.getElementById("bebidas").classList.add("hidden");
+  document.getElementById("extras").classList.add("hidden");
 
-function mostrarCategoria(categoria){
-  document.getElementById("lanches").style.display = "none";
-  document.getElementById("bebidas").style.display = "none";
-  document.getElementById("extras").style.display = "none";
-
-  document.getElementById(categoria).style.display = "block";
+  document.getElementById(sec).classList.remove("hidden");
 }
 
 function adicionar(nome, preco){
-  let itemExistente = carrinho.find(item => item.nome === nome);
+  let item = carrinho.find(i => i.nome === nome);
 
-  if(itemExistente){
-    itemExistente.quantidade += 1;
+  if(item){
+    item.qtd++;
   } else {
-    carrinho.push({nome, preco, quantidade: 1});
+    carrinho.push({nome, preco, qtd:1});
   }
 
   total += preco;
-  atualizarTela();
+  atualizar();
 }
 
-function atualizarTela(){
+function atualizar(){
   let lista = document.getElementById("lista");
   lista.innerHTML = "";
 
-  carrinho.forEach(item=>{
+  carrinho.forEach(i=>{
     let li = document.createElement("li");
-    li.textContent = item.nome + " (" + item.quantidade + "x) - R$ " + (item.preco * item.quantidade);
+    li.textContent = `${i.nome} (${i.qtd}x) - R$ ${i.preco * i.qtd}`;
     lista.appendChild(li);
   });
 
   document.getElementById("total").textContent = "Total: R$ " + total;
 }
 
-function limparCarrinho(){
+function limpar(){
   carrinho = [];
   total = 0;
-  atualizarTela();
+  atualizar();
 }
 
-function adicionarComExtras(botao){
-  let produto = botao.parentElement;
+function adicionarComExtras(btn){
+  let p = btn.parentElement;
 
-  let nome = produto.querySelector("h2").textContent;
-  let preco = parseFloat(produto.querySelector("p").textContent.replace("R$ ",""));
+  let nome = p.querySelector("h3").textContent;
+  let preco = parseFloat(p.querySelector("p").textContent.replace("R$ ",""));
+
+  let obs = p.querySelector(".obs")?.value || "";
 
   let extras = document.querySelectorAll("#extras input:checked");
-  let obs = produto.querySelector(".obs")?.value || "";
 
-  let nomeFinal = nome;
-  let precoFinal = preco;
-
-  let listaExtras = [];
+  let nomesExtras = [];
 
   extras.forEach(e=>{
-    listaExtras.push(e.value);
-    precoFinal += parseFloat(e.dataset.preco);
+    nomesExtras.push(e.value);
+    preco += parseFloat(e.dataset.preco);
   });
 
-  if(listaExtras.length > 0){
-    nomeFinal += " • Extras: " + listaExtras.join(", ");
+  if(nomesExtras.length > 0){
+    nome += " + " + nomesExtras.join(", ");
   }
 
-  if(obs.trim() !== ""){
-    nomeFinal += " (" + obs + ")";
+  if(obs.trim()){
+    nome += " (" + obs + ")";
   }
 
-  adicionar(nomeFinal, precoFinal);
-
-  if(produto.querySelector(".obs")){
-    produto.querySelector(".obs").value = "";
-  }
+  adicionar(nome, preco);
 }
 
-function finalizarPedido(){
-  let telefone = "53999816127";
-
+function whats(){
   let msg = "Pedido:\n";
 
-  carrinho.forEach(item=>{
-    msg += "- " + item.nome + " (" + item.quantidade + "x)\n";
+  carrinho.forEach(i=>{
+    msg += `- ${i.nome} (${i.qtd}x)\n`;
   });
 
   msg += "\nTotal: R$ " + total;
 
-  let url = `https://wa.me/${telefone}?text=${encodeURIComponent(msg)}`;
-  window.open(url);
+  window.open(`https://wa.me/53999816127?text=${encodeURIComponent(msg)}`);
 }
 </script>
 
