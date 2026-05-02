@@ -1,309 +1,375 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cardápio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio - Lanchonete da Jana</title>
 
-<style>
-body {
-  font-family: Arial;
-  background: #f4f6f8;
-  margin: 0;
-}
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            color: #333;
+        }
 
-/* TOPO */
-h1 {
-  background: #25D366;
-  color: white;
-  padding: 20px;
-  margin: 0;
-  text-align: center;
-}
+        /* TOPO */
+        h1 {
+            background: #25D366;
+            color: white;
+            padding: 20px;
+            margin: 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
-/* CATEGORIAS */
-.categorias {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  background: white;
-  overflow-x: auto;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
+        /* CATEGORIAS */
+        .categorias {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background: white;
+            overflow-x: auto;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
 
-.categorias button {
-  background: #eee;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 20px;
-  cursor: pointer;
-}
+        .categorias button {
+            background: #eee;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: bold;
+            transition: 0.3s;
+        }
 
-/* CONTAINER */
-.container {
-  padding: 15px;
-  padding-bottom: 260px; /* espaço pro carrinho + botão */
-}
+        .categorias button:hover {
+            background: #25D366;
+            color: white;
+        }
 
-/* PRODUTOS */
-.produto {
-  background: white;
-  margin-bottom: 15px;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
+        /* CONTAINER */
+        .container {
+            padding: 15px;
+            padding-bottom: 200px; /* Espaço para o carrinho fixo */
+        }
 
-.produto img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 10px;
-}
+        /* PRODUTOS */
+        .produto {
+            background: white;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
 
-/* BOTÕES */
-button {
-  background: #25D366;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  width: 100%;
-  margin-top: 10px;
-  cursor: pointer;
-}
+        .produto img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
 
-/* CARRINHO */
-#carrinho {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: white;
-  padding: 10px;
-  border-top: 2px solid #ddd;
-  z-index: 999;
-}
+        .produto h2 {
+            margin: 10px 0 5px 0;
+            font-size: 1.4rem;
+        }
 
-#lista {
-  max-height: 100px;
-  overflow-y: auto;
-}
+        .produto p {
+            color: #25D366;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 5px 0;
+        }
 
-/* BOTÃO WHATS */
-#finalizar {
-  position: fixed;
-  bottom: 120px;
-  right: 15px;
-  padding: 15px 20px;
-  border-radius: 50px;
-  background: #25D366;
-  color: white;
-  border: none;
-  z-index: 1000;
-}
+        .obs {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
 
-/* MOBILE */
-@media (max-width: 600px) {
-  #finalizar {
-    bottom: 140px;
-  }
-}
-</style>
+        /* ADICIONAIS NA ABA EXTRAS */
+        #extras label {
+            display: block;
+            background: white;
+            padding: 15px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* BOTÕES */
+        .btn-add {
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        /* CARRINHO FIXO */
+        #carrinho {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            padding: 15px;
+            border-top: 3px solid #25D366;
+            z-index: 999;
+            box-sizing: border-box;
+        }
+
+        #lista {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 100px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+        }
+
+        #lista li {
+            border-bottom: 1px solid #eee;
+            padding: 5px 0;
+        }
+
+        .total-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .btn-limpar {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* BOTÃO WHATSAPP */
+        #finalizar {
+            background: #128C7E;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+    </style>
 </head>
-
 <body>
 
 <h1>🍔 Lanchonete da Jana</h1>
 
 <!-- CATEGORIAS -->
 <div class="categorias">
-  <button onclick="mostrar('lanches')">🍔 Lanches</button>
-  <button onclick="mostrar('bebidas')">🥤 Bebidas</button>
-  <button onclick="mostrar('extras')">➕ Extras</button>
+    <button onclick="mostrar('lanches')">🍔 Lanches</button>
+    <button onclick="mostrar('bebidas')">🥤 Bebidas</button>
+    <button onclick="mostrar('extras')">➕ Extras</button>
 </div>
 
 <div class="container">
 
-<!-- LANCHES -->
-<div id="lanches">
-<h2>🍔 Lanches</h2>
+    <!-- SEÇÃO LANCHES -->
+    <div id="lanches">
+        <h2>Cardápio de Lanches</h2>
+        
+        <div class="produto">
+            <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=500">
+            <h2>X-Burger</h2>
+            <p>R$ 15,00</p>
+            <input type="text" class="obs" placeholder="Alguma observação?">
+            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
+        </div>
 
-<div class="produto">
-<img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=500">
-<h2>X-Burger</h2>
-<p>R$ 15</p>
-<input type="text" class="obs" placeholder="Observação">
-<button onclick="adicionarComExtras(this)">Adicionar</button>
+        <div class="produto">
+            <img src="https://images.unsplash.com/photo-1606755456206-b25206cde27e?w=500">
+            <h2>Bauru</h2>
+            <p>R$ 14,00</p>
+            <input type="text" class="obs" placeholder="Alguma observação?">
+            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
+        </div>
+
+        <div class="produto">
+            <img src="https://images.unsplash.com/photo-1551782450-17144efb9c50?w=500">
+            <h2>Cachorro Quente</h2>
+            <p>R$ 12,00</p>
+            <input type="text" class="obs" placeholder="Alguma observação?">
+            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
+        </div>
+    </div>
+
+    <!-- SEÇÃO BEBIDAS -->
+    <div id="bebidas" style="display:none">
+        <h2>Bebidas Geladas</h2>
+        <div class="produto">
+            <img src="https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=500">
+            <h2>Coca-Cola</h2>
+            <p>R$ 8,00</p>
+            <input type="text" class="obs" placeholder="Ex: Gelo e limão">
+            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
+        </div>
+    </div>
+
+    <!-- SEÇÃO EXTRAS -->
+    <div id="extras" style="display:none">
+        <h2>➕ Escolha seus Adicionais</h2>
+        <p><small>Marque aqui e depois adicione o lanche no carrinho!</small></p>
+        <label><input type="checkbox" value="Queijo" data-preco="2"> 🧀 Queijo (+ R$ 2,00)</label>
+        <label><input type="checkbox" value="Bacon" data-preco="3"> 🥓 Bacon (+ R$ 3,00)</label>
+        <label><input type="checkbox" value="Ovo" data-preco="2"> 🍳 Ovo (+ R$ 2,00)</label>
+    </div>
+
 </div>
 
-<div class="produto">
-<img src="https://images.unsplash.com/photo-1606755456206-b25206cde27e?w=500">
-<h2>Bauru</h2>
-<p>R$ 14</p>
-<input type="text" class="obs" placeholder="Observação">
-<button onclick="adicionarComExtras(this)">Adicionar</button>
-</div>
-
-<div class="produto">
-<img src="https://images.unsplash.com/photo-1551782450-17144efb9c50?w=500">
-<h2>Cachorro Quente</h2>
-<p>R$ 12</p>
-<input type="text" class="obs" placeholder="Observação">
-<button onclick="adicionarComExtras(this)">Adicionar</button>
-</div>
-</div>
-
-<!-- BEBIDAS -->
-<div id="bebidas" style="display:none">
-<h2>🥤 Bebidas</h2>
-
-<div class="produto">
-<img src="https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=500">
-<h2>Coca-Cola</h2>
-<p>R$ 8</p>
-<input type="text" class="obs" placeholder="Observação">
-<button onclick="adicionarComExtras(this)">Adicionar</button>
-</div>
-</div>
-
-<!-- EXTRAS -->
-<div id="extras" style="display:none">
-<h2>➕ Adicionais</h2>
-
-<label><input type="checkbox" value="Queijo" data-preco="2"> Queijo (+2)</label><br>
-<label><input type="checkbox" value="Bacon" data-preco="3"> Bacon (+3)</label><br>
-<label><input type="checkbox" value="Ovo" data-preco="2"> Ovo (+2)</label>
-</div>
-
-</div>
-
-<!-- CARRINHO -->
+<!-- AREA DO CARRINHO -->
 <div id="carrinho">
-<ul id="lista"></ul>
-<p id="total">Total: R$ 0</p>
-<button onclick="limparCarrinho()">Limpar</button>
+    <ul id="lista">
+        <li>Seu carrinho está vazio...</li>
+    </ul>
+    <div class="total-area">
+        <strong id="total">Total: R$ 0,00</strong>
+        <button class="btn-limpar" onclick="limparCarrinho()">Limpar</button>
+    </div>
+    <button id="finalizar" onclick="finalizarPedido()">📲 Finalizar Pedido no WhatsApp</button>
 </div>
-
-<!-- BOTÃO -->
-<button id="finalizar" onclick="finalizarPedido()">📲 Pedir no WhatsApp</button>
 
 <script>
-let carrinho = [];
-let total = 0;
+    let carrinho = [];
+    let totalGlobal = 0;
 
-/* CATEGORIA */
-function mostrar(id){
-  document.getElementById("lanches").style.display = "none";
-  document.getElementById("bebidas").style.display = "none";
-  document.getElementById("extras").style.display = "none";
-
-  document.getElementById(id).style.display = "block";
-}
-
-/* ADICIONAR */
-function adicionar(nome, preco){
-  let item = carrinho.find(i => i.nome === nome);
-
-  if(item){
-    item.quantidade++;
-  } else {
-    carrinho.push({nome, preco, quantidade:1});
-  }
-
-  total += preco;
-  atualizarTela();
-}
-
-/* ATUALIZA TELA */
-function atualizarTela(){
-  let lista = document.getElementById("lista");
-  lista.innerHTML = "";
-
-  carrinho.forEach(item=>{
-    let li = document.createElement("li");
-    li.textContent =
-      item.nome + " (" + item.quantidade + "x) - R$ " +
-      (item.preco * item.quantidade);
-
-    lista.appendChild(li);
-  });
-
-  document.getElementById("total").textContent = "Total: R$ " + total;
-}
-
-/* LIMPAR */
-function limparCarrinho(){
-  carrinho = [];
-  total = 0;
-  atualizarTela();
-}
-
-/* ADICIONAR COM EXTRAS */
-function adicionarComExtras(btn){
-  try {
-    let p = btn.closest(".produto");
-    let nomeBase = p.querySelector("h2").textContent; // Nome do lanche (X-Burger, etc)
-
-    // Pega o preço base do lanche
-    let precoTexto = p.querySelector("p").textContent;
-    let precoLanche = Number(precoTexto.replace(/[^\d.,]/g, "").replace(",", "."));
-    
-    let precoTotalItem = precoLanche;
-
-    // Observação
-    let obsInput = p.querySelector(".obs");
-    let obs = obsInput ? obsInput.value : "";
-
-    // Pega os EXTRAS marcados na aba de extras
-    let extras = document.querySelectorAll('#extras input[type="checkbox"]:checked');
-    let nomesExtras = [];
-
-    extras.forEach(e => {
-      nomesExtras.push(e.value);
-      precoTotalItem += Number(e.dataset.preco || 0); // Soma o valor do extra
-    });
-
-    // Monta o nome final que aparecerá no carrinho
-    let nomeFinal = nomeBase;
-    if(nomesExtras.length > 0){
-      nomeFinal += " + " + nomesExtras.join(", ");
+    // Trocar de categoria
+    function mostrar(id) {
+        document.getElementById("lanches").style.display = "none";
+        document.getElementById("bebidas").style.display = "none";
+        document.getElementById("extras").style.display = "none";
+        document.getElementById(id).style.display = "block";
     }
 
-    if(obs.trim()){
-      nomeFinal += " (" + obs + ")";
+    // Adicionar item ao carrinho
+    function adicionarNoArray(nome, preco) {
+        let itemExistente = carrinho.find(item => item.nome === nome);
+
+        if (itemExistente) {
+            itemExistente.quantidade++;
+        } else {
+            carrinho.push({ nome: nome, preco: preco, quantidade: 1 });
+        }
+
+        totalGlobal += preco;
+        atualizarVisual();
     }
 
-    // Adiciona ao carrinho com o preço já somado
-    adicionar(nomeFinal, precoTotalItem);
+    // Atualiza a lista na tela
+    function atualizarVisual() {
+        let listaUI = document.getElementById("lista");
+        listaUI.innerHTML = "";
 
-    // Limpa os extras e a observação para o próximo lanche
-    extras.forEach(e => e.checked = false);
-    if(obsInput) obsInput.value = "";
-    
-    alert("Adicionado ao carrinho!");
+        if (carrinho.length === 0) {
+            listaUI.innerHTML = "<li>Seu carrinho está vazio...</li>";
+        }
 
-  } catch (erro) {
-    console.error("Erro:", erro);
-  }
-}
-/* FINALIZAR */
-function finalizarPedido(){
-  let telefone = "53999816127";
+        carrinho.forEach(item => {
+            let li = document.createElement("li");
+            li.textContent = `${item.quantidade}x ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2)}`;
+            listaUI.appendChild(li);
+        });
 
-  let msg = "Pedido:\n";
+        document.getElementById("total").textContent = "Total: R$ " + totalGlobal.toFixed(2);
+    }
 
-  carrinho.forEach(item=>{
-    msg += "- " + item.nome + " (" + item.quantidade + "x)\n";
-  });
+    // Função principal de clique
+    function adicionarComExtras(botao) {
+        try {
+            let cardProduto = botao.closest(".produto");
+            
+            // Pegar Nome e Preço Base
+            let nomeLanche = cardProduto.querySelector("h2").textContent;
+            let textoPreco = cardProduto.querySelector("p").textContent;
+            let precoBase = parseFloat(textoPreco.replace("R$", "").replace(",", "."));
 
-  msg += "\nTotal: R$ " + total;
+            let precoFinal = precoBase;
+            let listaAdicionais = [];
 
-  let url = `https://wa.me/${telefone}?text=${encodeURIComponent(msg)}`;
-  window.open(url);
-}
+            // Verificar extras marcados na aba Extras
+            let checks = document.querySelectorAll('#extras input[type="checkbox"]:checked');
+            checks.forEach(check => {
+                listaAdicionais.push(check.value);
+                precoFinal += parseFloat(check.dataset.preco);
+            });
+
+            // Montar nome final
+            let nomeCompleto = nomeLanche;
+            if (listaAdicionais.length > 0) {
+                nomeCompleto += " + " + listaAdicionais.join(", ");
+            }
+
+            // Observação
+            let campoObs = cardProduto.querySelector(".obs");
+            if (campoObs && campoObs.value.trim() !== "") {
+                nomeCompleto += " (" + campoObs.value + ")";
+            }
+
+            // Enviar para o carrinho
+            adicionarNoArray(nomeCompleto, precoFinal);
+
+            // Limpar campos
+            checks.forEach(c => c.checked = false);
+            if (campoObs) campoObs.value = "";
+
+            alert("Adicionado com sucesso!");
+
+        } catch (erro) {
+            console.error(erro);
+            alert("Erro ao adicionar. Verifique o console.");
+        }
+    }
+
+    function limparCarrinho() {
+        carrinho = [];
+        totalGlobal = 0;
+        atualizarVisual();
+    }
+
+    function finalizarPedido() {
+        if (carrinho.length === 0) {
+            alert("Adicione pelo menos um item!");
+            return;
+        }
+
+        let fone = "53999816127";
+        let texto = "*Novo Pedido - Lanchonete da Jana*\n\n";
+
+        carrinho.forEach(item => {
+            texto += `*${item.quantidade}x* ${item.nome}\n`;
+            texto += `Subtotal: R$ ${(item.preco * item.quantidade).toFixed(2)}\n\n`;
+        });
+
+        texto += `*Total do Pedido: R$ ${totalGlobal.toFixed(2)}*`;
+
+        let link = `https://wa.me/${fone}?text=${encodeURIComponent(texto)}`;
+        window.open(link, '_blank');
+    }
 </script>
 
 </body>
