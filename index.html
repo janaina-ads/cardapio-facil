@@ -3,31 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardápio - Lanchonete da Jana</title>
-
+    <title>Cardápio da Jana</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f6f8; margin: 0; padding-bottom: 220px; }
+        body { font-family: Arial, sans-serif; background: #f4f6f8; margin: 0; padding-bottom: 250px; }
         h1 { background: #25D366; color: white; padding: 20px; margin: 0; text-align: center; }
         
-        .categorias { display: flex; gap: 10px; padding: 15px; background: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow-x: auto; }
-        .categorias button { background: #eee; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; white-space: nowrap; }
+        .categorias { display: flex; gap: 10px; padding: 10px; background: white; position: sticky; top: 0; z-index: 1000; overflow-x: auto; }
+        .categorias button { background: #eee; border: none; padding: 10px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        .categorias button.active { background: #25D366; color: white; }
 
         .container { padding: 15px; }
-        .produto { background: white; margin-bottom: 20px; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .produto img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; }
+        .produto { background: white; margin-bottom: 15px; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 2px solid transparent; }
+        .produto.selecionado { border-color: #25D366; background: #e8fdf0; }
         
-        .preco { color: #25D366; font-weight: bold; font-size: 1.2rem; margin: 5px 0; }
+        .produto img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; }
         .obs { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-top: 10px; box-sizing: border-box; }
-        .btn-add { background: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer; font-weight: bold; }
+        
+        .btn-selecionar { background: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer; font-weight: bold; }
+        
+        #area-confirmacao { display: none; background: #fff3cd; padding: 15px; position: sticky; top: 60px; z-index: 998; border-bottom: 2px solid #ffeeba; text-align: center; }
+        #btn-confirmar-extra { background: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; }
 
-        /* ABA DE EXTRAS */
-        #extras label { display: block; background: white; padding: 15px; margin-bottom: 8px; border-radius: 10px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        #extras label { display: block; background: white; padding: 15px; margin-bottom: 5px; border-radius: 8px; border: 1px solid #ddd; font-size: 18px; }
+        #extras input { transform: scale(1.5); margin-right: 10px; }
 
-        /* CARRINHO */
-        #carrinho { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; border-top: 3px solid #25D366; box-sizing: border-box; z-index: 2000; }
-        #lista { list-style: none; padding: 0; max-height: 80px; overflow-y: auto; font-size: 0.9rem; margin-bottom: 10px; }
-        .total-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        #finalizar { background: #128C7E; color: white; border: none; padding: 15px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold; font-size: 1.1rem; }
+        #carrinho { position: fixed; bottom: 0; width: 100%; background: white; padding: 15px; border-top: 2px solid #ddd; z-index: 999; box-sizing: border-box; }
+        #lista { max-height: 80px; overflow-y: auto; list-style: none; padding: 0; margin: 0; }
+        #finalizar { background: #128C7E; color: white; border: none; padding: 15px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; }
     </style>
 </head>
 <body>
@@ -37,78 +39,72 @@
 <div class="categorias">
     <button onclick="mostrar('lanches')">🍔 Lanches</button>
     <button onclick="mostrar('bebidas')">🥤 Bebidas</button>
-    <button onclick="mostrar('extras')">➕ Adicionais</button>
+    <button id="btn-aba-extras" onclick="mostrar('extras')">➕ Extras</button>
+</div>
+
+<!-- AVISO DE ITEM SELECIONADO -->
+<div id="area-confirmacao">
+    <span id="txt-pendente">Item selecionado!</span><br><br>
+    <button onclick="mostrar('extras')">✨ ADICIONAR EXTRAS</button>
+    <button id="btn-confirmar-extra" onclick="confirmarItem()">✅ FINALIZAR ITEM</button>
 </div>
 
 <div class="container">
-    
-    <!-- LANCHES -->
     <div id="lanches">
-        <h2>🍔 Nossos Lanches</h2>
-        
         <div class="produto">
             <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=500">
             <h2>X-Burger</h2>
-            <p class="preco">R$ 15,00</p>
-            <input type="text" class="obs" placeholder="Observações (ex: sem cebola)">
-            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
+            <p>R$ 15.00</p>
+            <input type="text" class="campo-obs" placeholder="Alguma observação?">
+            <button class="btn-selecionar" onclick="selecionarLanche(this)">Escolher este</button>
         </div>
-
         <div class="produto">
             <img src="https://images.unsplash.com/photo-1606755456206-b25206cde27e?w=500">
             <h2>Bauru</h2>
-            <p class="preco">R$ 14,00</p>
-            <input type="text" class="obs" placeholder="Observações...">
-            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
+            <p>R$ 14.00</p>
+            <input type="text" class="campo-obs" placeholder="Alguma observação?">
+            <button class="btn-selecionar" onclick="selecionarLanche(this)">Escolher este</button>
         </div>
-
         <div class="produto">
             <img src="https://images.unsplash.com/photo-1551782450-17144efb9c50?w=500">
             <h2>Cachorro Quente</h2>
-            <p class="preco">R$ 12,00</p>
-            <input type="text" class="obs" placeholder="Observações...">
-            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
+            <p>R$ 12.00</p>
+            <input type="text" class="campo-obs" placeholder="Alguma observação?">
+            <button class="btn-selecionar" onclick="selecionarLanche(this)">Escolher este</button>
         </div>
     </div>
 
-    <!-- BEBIDAS -->
     <div id="bebidas" style="display:none">
-        <h2>🥤 Bebidas Geladas</h2>
         <div class="produto">
             <img src="https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=500">
             <h2>Coca-Cola</h2>
-            <p class="preco">R$ 8,00</p>
-            <input type="text" class="obs" placeholder="Ex: Com gelo e limão">
-            <button class="btn-add" onclick="adicionarComExtras(this)">Adicionar ao Carrinho</button>
+            <p>R$ 8.00</p>
+            <input type="text" class="campo-obs" placeholder="Observação">
+            <button class="btn-selecionar" onclick="selecionarLanche(this)">Escolher esta</button>
         </div>
     </div>
 
-    <!-- EXTRAS (FUNCIONA PARA TODOS) -->
     <div id="extras" style="display:none">
-        <h2>➕ Adicionais Extras</h2>
-        <p><small>Escolha aqui e depois adicione o seu lanche/bebida.</small></p>
-        <label><input type="checkbox" value="Queijo" data-preco="2"> 🧀 Queijo (+ R$ 2,00)</label>
-        <label><input type="checkbox" value="Bacon" data-preco="3"> 🥓 Bacon (+ R$ 3,00)</label>
-        <label><input type="checkbox" value="Ovo" data-preco="2"> 🍳 Ovo (+ R$ 2,00)</label>
+        <h2>Turbine seu lanche:</h2>
+        <label><input type="checkbox" class="extra-item" value="Queijo" data-preco="2"> Queijo (+R$ 2)</label>
+        <label><input type="checkbox" class="extra-item" value="Bacon" data-preco="3"> Bacon (+R$ 3)</label>
+        <label><input type="checkbox" class="extra-item" value="Ovo" data-preco="2"> Ovo (+R$ 2)</label>
+        <br>
+        <button onclick="confirmarItem()" style="background:#25D366; color:white; padding:15px; width:100%; border:none; border-radius:8px; font-weight:bold;">TUDO PRONTO! ADICIONAR AO CARRINHO</button>
     </div>
-
 </div>
 
-<!-- CARRINHO -->
 <div id="carrinho">
-    <ul id="lista"><li>Seu carrinho está vazio</li></ul>
-    <div class="total-area">
-        <strong id="total">Total: R$ 0,00</strong>
-        <button onclick="limparCarrinho()" style="border:none; background:none; color:red; cursor:pointer;">Limpar Tudo</button>
-    </div>
-    <button id="finalizar" onclick="finalizarPedido()">📲 Pedir no WhatsApp</button>
+    <ul id="lista"></ul>
+    <p><strong>Total: R$ <span id="valor-total">0.00</span></strong></p>
+    <button id="finalizar" onclick="finalizarNoWhats()">📲 Enviar Pedido no WhatsApp</button>
 </div>
 
 <script>
     let carrinho = [];
-    let totalGlobal = 0;
+    let totalGeral = 0;
+    let itemPendente = null;
 
-    // Função para trocar as abas
     function mostrar(id) {
         document.getElementById("lanches").style.display = "none";
         document.getElementById("bebidas").style.display = "none";
@@ -116,81 +112,78 @@
         document.getElementById(id).style.display = "block";
     }
 
-    // A MÁGICA: Esta função funciona para qualquer item de qualquer aba
-    function adicionarComExtras(botao) {
-        // 1. Pega os dados do produto que você clicou
-        let card = botao.closest(".produto");
-        let nomeItem = card.querySelector("h2").textContent;
-        let precoTexto = card.querySelector(".preco").textContent;
-        let precoBase = parseFloat(precoTexto.replace("R$", "").replace(",", "."));
+    function selecionarLanche(botao) {
+        const card = botao.parentElement;
+        const nome = card.querySelector("h2").innerText;
+        const preco = parseFloat(card.querySelector("p").innerText.replace("R$", ""));
+        const obs = card.querySelector(".campo-obs").value;
+
+        // Guarda o item temporariamente
+        itemPendente = { nome, preco, obs };
+
+        // Destaca o item
+        document.querySelectorAll('.produto').forEach(p => p.classList.remove('selecionado'));
+        card.classList.add('selecionado');
+
+        // Mostra a barra de confirmação
+        document.getElementById("area-confirmacao").style.display = "block";
+        document.getElementById("txt-pendente").innerHTML = "🥪 <b>" + nome + "</b> selecionado!";
         
-        let precoFinal = precoBase;
-        let listaAdicionais = [];
-
-        // 2. Vai lá na aba "extras" ver o que está marcado (mesmo se a aba estiver escondida)
-        let checks = document.querySelectorAll('#extras input[type="checkbox"]:checked');
-        
-        checks.forEach(check => {
-            listaAdicionais.push(check.value);
-            precoFinal += parseFloat(check.dataset.preco);
-            // check.checked = false; // Opcional: desmarca após adicionar
-        });
-
-        // 3. Monta o nome com extras e observação
-        let nomeCompleto = nomeItem;
-        if (listaAdicionais.length > 0) {
-            nomeCompleto += " + " + listaAdicionais.join(", ");
-        }
-
-        let campoObs = card.querySelector(".obs");
-        if (campoObs && campoObs.value.trim() !== "") {
-            nomeCompleto += " (" + campoObs.value + ")";
-        }
-
-        // 4. Adiciona no carrinho
-        carrinho.push({ nome: nomeCompleto, preco: precoFinal });
-        totalGlobal += precoFinal;
-
-        // 5. Limpa os campos para o próximo item
-        if(campoObs) campoObs.value = "";
-        // checks.forEach(c => c.checked = false); // Ative se quiser limpar os extras após cada lanche
-
-        atualizarInterface();
-        alert("Adicionado: " + nomeItem);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function atualizarInterface() {
-        let listaUI = document.getElementById("lista");
-        listaUI.innerHTML = "";
+    function confirmarItem() {
+        if(!itemPendente) return;
+
+        let extrasNomes = [];
+        let valorExtras = 0;
+        const checkboxes = document.querySelectorAll(".extra-item:checked");
+
+        checkboxes.forEach(item => {
+            extrasNomes.push(item.value);
+            valorExtras += parseFloat(item.getAttribute("data-preco"));
+            item.checked = false; // Limpa para o próximo
+        });
+
+        let precoFinal = itemPendente.preco + valorExtras;
+        let desc = itemPendente.nome;
         
+        if(extrasNomes.length > 0) desc += " + " + extrasNomes.join(", ");
+        if(itemPendente.obs) desc += " (" + itemPendente.obs + ")";
+
+        carrinho.push({ nome: desc, preco: precoFinal });
+        totalGeral += precoFinal;
+
+        // Reseta tudo
+        itemPendente = null;
+        document.getElementById("area-confirmacao").style.display = "none";
+        document.querySelectorAll('.produto').forEach(p => {
+            p.classList.remove('selecionado');
+            p.querySelector('.campo-obs').value = "";
+        });
+
+        atualizarTela();
+        mostrar('lanches'); // Volta para os lanches
+    }
+
+    function atualizarTela() {
+        const listaUI = document.getElementById("lista");
+        listaUI.innerHTML = "";
         carrinho.forEach(item => {
-            let li = document.createElement("li");
-            li.textContent = `${item.nome} - R$ ${item.preco.toFixed(2)}`;
+            const li = document.createElement("li");
+            li.innerText = "• " + item.nome + " - R$ " + item.preco.toFixed(2);
             listaUI.appendChild(li);
         });
-
-        document.getElementById("total").textContent = "Total: R$ " + totalGlobal.toFixed(2);
+        document.getElementById("valor-total").innerText = totalGeral.toFixed(2);
     }
 
-    function limparCarrinho() {
-        carrinho = [];
-        totalGlobal = 0;
-        atualizarInterface();
-    }
-
-    function finalizarPedido() {
-        if(carrinho.length === 0) return alert("Adicione um item primeiro!");
-        
-        let fone = "53999816127";
-        let msg = "*Novo Pedido - Lanchonete da Jana*\n\n";
-        
-        carrinho.forEach(item => {
-            msg += `• ${item.nome} - R$ ${item.preco.toFixed(2)}\n`;
-        });
-        
-        msg += `\n*Total: R$ ${totalGlobal.toFixed(2)}*`;
-        
-        window.open(`https://wa.me/${fone}?text=${encodeURIComponent(msg)}`);
+    function finalizarNoWhats() {
+        if(carrinho.length === 0) return alert("Carrinho vazio!");
+        const fone = "53999816127";
+        let msg = "*Pedido Lanchonete da Jana*\n\n";
+        carrinho.forEach(i => msg += i.nome + " - R$ " + i.preco.toFixed(2) + "\n");
+        msg += "\n*Total: R$ " + totalGeral.toFixed(2) + "*";
+        window.open("https://wa.me/" + fone + "?text=" + encodeURIComponent(msg));
     }
 </script>
 
