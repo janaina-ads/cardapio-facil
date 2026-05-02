@@ -9,6 +9,9 @@
         body { font-family: 'Segoe UI', sans-serif; background: #f4f6f8; margin: 0; padding-bottom: 220px; }
         h1 { background: #25D366; color: white; padding: 20px; margin: 0; text-align: center; }
         
+        /* Estilo da Mesa no topo */
+        #info-mesa { text-align: center; padding: 10px; color: #444; background: #e8fdf0; font-size: 1.1rem; border-bottom: 1px solid #ddd; }
+
         .categorias { display: flex; gap: 10px; padding: 15px; background: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow-x: auto; }
         .categorias button { background: #eee; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; white-space: nowrap; }
 
@@ -32,6 +35,9 @@
 
 <h1>🍔 Lanchonete da Jana</h1>
 
+<!-- Identificação da Mesa -->
+<div id="info-mesa"></div>
+
 <div class="categorias">
     <button onclick="mostrar('lanches')">🍔 Lanches</button>
     <button onclick="mostrar('bebidas')">🥤 Bebidas</button>
@@ -41,7 +47,7 @@
 <div class="container">
     
     <!-- LANCHES -->
-    <div id="lanches" class="secao-menu">
+    <div id="lanches">
         <div class="produto" data-categoria="lanche">
             <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=500">
             <h2>X-Burger</h2>
@@ -68,7 +74,7 @@
     </div>
 
     <!-- BEBIDAS -->
-    <div id="bebidas" class="secao-menu" style="display:none">
+    <div id="bebidas" style="display:none">
         <div class="produto" data-categoria="bebida">
             <img src="https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=500">
             <h2>Coca-Cola</h2>
@@ -99,6 +105,17 @@
 </div>
 
 <script>
+    // --- LÓGICA DA MESA ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const numeroMesa = urlParams.get('mesa') || "Não informada";
+
+    window.onload = function() {
+        if(numeroMesa !== "Não informada") {
+            document.getElementById("info-mesa").innerHTML = "📍 <b>Mesa: " + numeroMesa + "</b>";
+        }
+    };
+
+    // --- LÓGICA DO CARRINHO ---
     let carrinho = [];
     let totalGlobal = 0;
 
@@ -118,13 +135,12 @@
         let precoFinal = precoBase;
         let adicionaisNomes = [];
 
-        // SÓ PEGA EXTRAS SE FOR LANCHE
         if (categoria === "lanche") {
             let checks = document.querySelectorAll('.extra-check:checked');
             checks.forEach(c => {
                 adicionaisNomes.push(c.value);
                 precoFinal += parseFloat(c.dataset.preco);
-                c.checked = false; // Desmarca para o próximo não vir errado
+                c.checked = false; 
             });
         }
 
@@ -136,7 +152,7 @@
         let obsInput = card.querySelector(".obs");
         if (obsInput && obsInput.value.trim() !== "") {
             nomeCompleto += " (" + obsInput.value + ")";
-            obsInput.value = ""; // Limpa a observação
+            obsInput.value = ""; 
         }
 
         carrinho.push({ nome: nomeCompleto, preco: precoFinal });
@@ -164,9 +180,14 @@
     function finalizarPedido() {
         if(carrinho.length === 0) return alert("Carrinho vazio!");
         let fone = "53999816127";
-        let texto = "*Pedido Lanchonete da Jana*\n\n";
+        
+        // MENSAGEM COM MESA NO TOPO
+        let texto = "*PEDIDO DA MESA: " + numeroMesa + "*\n";
+        texto += "------------------------------\n\n";
+        
         carrinho.forEach(i => texto += `• ${i.nome} - R$ ${i.preco.toFixed(2)}\n`);
         texto += `\n*Total: R$ ${totalGlobal.toFixed(2)}*`;
+        
         window.open(`https://wa.me/${fone}?text=${encodeURIComponent(texto)}`);
     }
 </script>
